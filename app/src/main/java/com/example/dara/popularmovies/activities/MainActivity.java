@@ -1,6 +1,7 @@
 package com.example.dara.popularmovies.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -27,7 +28,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MovieAdapter.ItemClickListener {
 
     private RecyclerView mRecyclerView;
 
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
         mList = new ArrayList<>();
 
-        mAdapter = new MovieAdapter(mList);
+        mAdapter = new MovieAdapter(mList, this);
 
         GridLayoutManager layoutManager = new
                 GridLayoutManager(this, 2);
@@ -119,13 +120,21 @@ public class MainActivity extends AppCompatActivity {
             mLoadingIndicator.setVisibility(View.INVISIBLE);
             if (result != null && !result.equals("")) {
                 mList = MoviesJsonUtils.extractMoviesFromJson(result);
-                mAdapter = new MovieAdapter(mList);
+                mAdapter = new MovieAdapter(mList, MainActivity.this);
                 mRecyclerView.setAdapter(mAdapter);
                 showData();
             } else {
                 showError();
             }
         }
+    }
+
+    @Override
+    public void onItemClickListener(Movie movie) {
+        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+        intent.putExtra(DetailActivity.EXTRA_MOVIE_ID, movie);
+        startActivity(intent);
+
     }
 
     @Override

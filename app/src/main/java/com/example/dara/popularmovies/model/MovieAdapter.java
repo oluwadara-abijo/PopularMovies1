@@ -20,8 +20,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     private List<Movie> mMovieData;
 
     //Constructor
-    public MovieAdapter (List<Movie> data) {
+    public MovieAdapter(List<Movie> data, ItemClickListener clickListener) {
         mMovieData = data;
+        mItemClickListener = clickListener;
+    }
+
+    private final ItemClickListener mItemClickListener;
+
+    //Interface for click handling
+    public interface ItemClickListener {
+        void onItemClickListener (Movie movie);
     }
 
     @NonNull
@@ -38,9 +46,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     @Override
     public void onBindViewHolder(@NonNull MovieAdapterViewHolder holder, int position) {
         Movie currentMovie = mMovieData.get(position);
-        String title = currentMovie.getTitle();
-        String posterUrl = currentMovie.getPosterUrl();
-        Log.d(">>>>>", posterUrl);
 
         Picasso.get()
                 .load(currentMovie.getPosterUrl())
@@ -55,14 +60,21 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         return mMovieData.size();
     }
 
-    class MovieAdapterViewHolder extends RecyclerView.ViewHolder {
+    //ViewHolder inner class
+    public class MovieAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         ImageView mPosterImageView;
 
         public MovieAdapterViewHolder(View itemView) {
             super(itemView);
             mPosterImageView = itemView.findViewById(R.id.image_view_movie_poster);
+            itemView.setOnClickListener(this);
         }
 
+        @Override
+        public void onClick(View view) {
+            int position = getAdapterPosition();
+            mItemClickListener.onItemClickListener(mMovieData.get(position));
+        }
     }
 }

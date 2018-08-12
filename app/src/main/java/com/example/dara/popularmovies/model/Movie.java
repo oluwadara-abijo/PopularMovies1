@@ -1,6 +1,8 @@
 package com.example.dara.popularmovies.model;
 
-public class Movie {
+import java.io.Serializable;
+
+public class Movie implements Serializable {
 
     //Title of movie
     private String mTitle;

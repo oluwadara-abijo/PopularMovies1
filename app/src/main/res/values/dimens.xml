@@ -2,4 +2,6 @@
 <resources>
     <dimen name="image_width">185dp</dimen>
     <dimen name="image_height">278dp</dimen>
+    <dimen name="image_width_small">100dp</dimen>
+    <dimen name="image_height_small">150dp</dimen>
 </resources>
