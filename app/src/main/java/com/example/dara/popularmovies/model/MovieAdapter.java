@@ -16,6 +16,7 @@ import java.util.List;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder> {
 
+    //List object that holds movie data
     private List<Movie> mMovieData;
 
     //Constructor
@@ -43,8 +44,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
         Picasso.get()
                 .load(currentMovie.getPosterUrl())
-//                .placeholder(R.drawable.poster_sample)
-                .error(R.drawable.poster_sample)
+                .placeholder(R.drawable.poster_sample)
+                .error(R.drawable.poster_error)
                 .into(holder.mPosterImageView);
 
     }
