@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
 
         mRecyclerView.setAdapter(mAdapter);
 
-        loadMoviesData();
+        loadPopularMoviesData();
     }
 
     private boolean isNetworkAvailable() {
@@ -73,12 +73,23 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
         return activeNetworkInfo != null;
     }
 
-    public void loadMoviesData() {
+    public void loadPopularMoviesData() {
         if (!isNetworkAvailable()) {
             showError();
             mErrorMessageTextView.setText(R.string.network_error_message);
         } else {
             URL moviesUrl = NetworkUtils.popularMoviesUrl();
+            new MoviesAsyncTask().execute(moviesUrl);
+        }
+
+    }
+
+    public void loadTopRatedMoviesData() {
+        if (!isNetworkAvailable()) {
+            showError();
+            mErrorMessageTextView.setText(R.string.network_error_message);
+        } else {
+            URL moviesUrl = NetworkUtils.topRatedMoviesUrl();
             new MoviesAsyncTask().execute(moviesUrl);
         }
 
@@ -148,9 +159,16 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_refresh) {
-            loadMoviesData();
-            return true;
+        switch (id) {
+            case R.id.action_refresh:
+            case R.id.action_sort_by_popularity:
+                mRecyclerView.setAdapter(null);
+                loadPopularMoviesData();
+                return true;
+            case R.id.action_sort_by_rating:
+                mRecyclerView.setAdapter(null);
+                loadTopRatedMoviesData();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

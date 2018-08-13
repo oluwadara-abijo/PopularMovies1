@@ -3,6 +3,8 @@ package com.example.dara.popularmovies.utilities;
 import android.net.Uri;
 import android.util.Log;
 
+import com.example.dara.popularmovies.BuildConfig;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -13,7 +15,7 @@ import java.util.Scanner;
 public class NetworkUtils {
     private static final String MOVIES_BASE_URL = "https://api.themoviedb.org/3/discover/movie";
 
-    private static final String API_KEY_VALUE = "";
+    private static final String API_KEY_VALUE = BuildConfig.ApiKey;
 
     //Query parameter strings
     private static final String API_KEY = "api_key";

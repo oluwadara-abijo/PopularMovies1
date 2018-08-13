@@ -3,4 +3,7 @@
     <string name="movie_poster">Movie poster</string>
     <string name="error_message">An error has occurred. Please try again.</string>
     <string name="network_error_message">Network unavailable. Check your internet connection.</string>
+    <string name="sort_by_popularity_label">Most Popular</string>
+    <string name="sort_by_rating_label">Top Rated</string>
+
 </resources>

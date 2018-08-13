@@ -8,4 +8,16 @@
         android:title="Refresh"
         app:showAsAction="ifRoom"/>
 
+    <item
+        android:id="@+id/action_sort_by_popularity"
+        android:title="@string/sort_by_popularity_label"
+        app:showAsAction="never"
+        android:orderInCategory="1"/>
+
+    <item
+        android:id="@+id/action_sort_by_rating"
+        android:title="@string/sort_by_rating_label"
+        app:showAsAction="never"
+        android:orderInCategory="2"/>
+
 </menu>
