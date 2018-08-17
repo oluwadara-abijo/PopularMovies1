@@ -14,11 +14,10 @@ import java.util.List;
 
 public class MoviesJsonUtils {
 
-    public static String buildImageUrl(String posterPath) {
+    private static String buildImageUrl(String posterPath) {
         final String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/";
         final String IMAGE_SIZE = "w185";
-        String imageUrl = IMAGE_BASE_URL+IMAGE_SIZE+posterPath;
-        return imageUrl;
+        return IMAGE_BASE_URL+IMAGE_SIZE+posterPath;
     }
 
     /**

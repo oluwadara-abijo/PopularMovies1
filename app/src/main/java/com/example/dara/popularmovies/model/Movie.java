@@ -5,19 +5,19 @@ import java.io.Serializable;
 public class Movie implements Serializable {
 
     //Title of movie
-    private String mTitle;
+    private final String mTitle;
 
     //Movie poster path
-    private String mPosterUrl;
+    private final String mPosterUrl;
 
     //Movie overview
-    private String mOverview;
+    private final String mOverview;
 
     //Movie release date
-    private String mReleaseDate;
+    private final String mReleaseDate;
 
     //Movie vote average
-    private int mVoteAverage;
+    private final int mVoteAverage;
 
     //Constructor which creates an object of the Movies object
      public Movie (String title, String posterUrl, String overview, String releaseDate,
@@ -33,36 +33,16 @@ public class Movie implements Serializable {
         return mTitle;
     }
 
-    public void setTitle(String mTitle) {
-        this.mTitle = mTitle;
-    }
-
-    public void setPosterUrl(String mPosterPath) {
-        this.mPosterUrl = mPosterPath;
-    }
-
     public String getPosterUrl() {
         return mPosterUrl;
-    }
-
-    public void setOverview(String mOverview) {
-        this.mOverview = mOverview;
     }
 
     public String getOverview() {
         return mOverview;
     }
 
-    public void setReleaseDate(String mReleaseDate) {
-        this.mReleaseDate = mReleaseDate;
-    }
-
     public String getReleaseDate() {
         return mReleaseDate;
-    }
-
-    public void setVoteAverage(int mVoteAverage) {
-        this.mVoteAverage = mVoteAverage;
     }
 
     public int getVoteAverage() {

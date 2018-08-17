@@ -40,7 +40,7 @@ public class DetailActivity extends AppCompatActivity {
         populateUI(mMovie);
     }
 
-    void populateUI(Movie movie) {
+    private void populateUI(Movie movie) {
         if (movie == null) return;
 
         String releaseDate = movie.getReleaseDate();
@@ -49,12 +49,15 @@ public class DetailActivity extends AppCompatActivity {
 
         mTitleTextView.setText(movie.getTitle());
         mReleaseDate.setText(releaseYear);
-        mRating.setText(String.valueOf(movie.getVoteAverage()));
+        String voteAverage = String.valueOf(movie.getVoteAverage());
+        String slashTen = "/10";
+        String fullVoteAverage = voteAverage + slashTen;
+        mRating.setText(String.valueOf(fullVoteAverage));
         mOverview.setText(movie.getOverview());
 
         Picasso.get()
                 .load(movie.getPosterUrl())
-                .placeholder(R.drawable.poster_sample)
+                .placeholder(R.drawable.image_loading)
                 .error(R.drawable.poster_error)
                 .into(mMoviePoster);
     }

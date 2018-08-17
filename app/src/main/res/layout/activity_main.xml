@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/darker_gray"
-    android:foreground="?android:selectableItemBackground"
+    android:background="#CFD8DC"
     tools:context=".activities.MainActivity">
 
     <android.support.v7.widget.RecyclerView
@@ -16,17 +15,21 @@
         android:id="@+id/tv_error_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:layout_gravity="center_horizontal"
-        android:padding="16dp"
+        android:fontFamily="sans-serif-smallcaps"
+        android:gravity="center"
+        android:padding="@dimen/item_padding_16"
         android:text="@string/error_message"
+        android:textColor="@color/colorError"
         android:textSize="18sp"
         android:visibility="gone" />
 
     <ProgressBar
         android:id="@+id/loading_indicator"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:visibility="gone" />
 
-</FrameLayout>
+</RelativeLayout>

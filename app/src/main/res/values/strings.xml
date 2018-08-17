@@ -5,5 +5,9 @@
     <string name="network_error_message">Network unavailable. Check your internet connection.</string>
     <string name="sort_by_popularity_label">Most Popular</string>
     <string name="sort_by_rating_label">Top Rated</string>
+    <string name="action_refresh_label">Refresh</string>
+    <string name="synopsis_label">Synopsis:</string>
+    <string name="rating_label">Rating</string>
+    <string name="year_label">Year</string>
 
 </resources>

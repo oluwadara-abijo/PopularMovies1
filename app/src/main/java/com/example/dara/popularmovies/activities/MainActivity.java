@@ -1,5 +1,6 @@
 package com.example.dara.popularmovies.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -27,6 +28,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements MovieAdapter.ItemClickListener {
 
@@ -69,23 +71,23 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        NetworkInfo activeNetworkInfo = Objects.requireNonNull(connectivityManager).getActiveNetworkInfo();
         return activeNetworkInfo != null;
     }
 
-    public void loadPopularMoviesData() {
-        if (!isNetworkAvailable()) {
-            showError();
-            mErrorMessageTextView.setText(R.string.network_error_message);
-        } else {
+    private void loadPopularMoviesData() {
+        if (isNetworkAvailable()) {
             URL moviesUrl = NetworkUtils.popularMoviesUrl();
             new MoviesAsyncTask().execute(moviesUrl);
+        } else {
+            showError();
+            mErrorMessageTextView.setText(R.string.network_error_message);
         }
 
     }
 
-    public void loadTopRatedMoviesData() {
-        if (!isNetworkAvailable()) {
+    private void loadTopRatedMoviesData() {
+        if (isNetworkAvailable()) {
             showError();
             mErrorMessageTextView.setText(R.string.network_error_message);
         } else {
@@ -95,17 +97,18 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
 
     }
 
-    public void showData() {
+    private void showData() {
         mRecyclerView.setVisibility(View.VISIBLE);
         mErrorMessageTextView.setVisibility(View.GONE);
     }
 
-    public void showError() {
+    private void showError() {
         mRecyclerView.setVisibility(View.INVISIBLE);
         mErrorMessageTextView.setVisibility(View.VISIBLE);
     }
 
-    public class MoviesAsyncTask extends AsyncTask<URL, Void, String> {
+    @SuppressLint("StaticFieldLeak")
+    class MoviesAsyncTask extends AsyncTask<URL, Void, String> {
 
         @Override
         protected void onPreExecute() {
