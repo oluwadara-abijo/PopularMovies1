@@ -88,11 +88,11 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
 
     private void loadTopRatedMoviesData() {
         if (isNetworkAvailable()) {
-            showError();
-            mErrorMessageTextView.setText(R.string.network_error_message);
-        } else {
             URL moviesUrl = NetworkUtils.topRatedMoviesUrl();
             new MoviesAsyncTask().execute(moviesUrl);
+        } else {
+            showError();
+            mErrorMessageTextView.setText(R.string.network_error_message);
         }
 
     }

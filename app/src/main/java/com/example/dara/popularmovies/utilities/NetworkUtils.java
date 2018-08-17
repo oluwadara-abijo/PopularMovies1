@@ -13,14 +13,15 @@ import java.net.URL;
 import java.util.Scanner;
 
 public class NetworkUtils {
-    private static final String MOVIES_BASE_URL = "https://api.themoviedb.org/3/discover/movie";
+    private static final String POPULAR_MOVIES_BASE_URL = "http://api.themoviedb.org/3/movie/popular";
+
+    private static final String TOP_RATED_MOVIES_BASE_URL = "http://api.themoviedb.org/3/movie/top_rated";
+
 
     private static final String API_KEY_VALUE = BuildConfig.ApiKey;
 
     //Query parameter strings
     private static final String API_KEY = "api_key";
-
-    private static final String SORT_BY = "sort_by";
 
     /**
      * Returns new URL object based on popularity
@@ -28,10 +29,9 @@ public class NetworkUtils {
     public static URL popularMoviesUrl () {
         URL queryUrl = null;
 
-        Uri builtUri = Uri.parse(MOVIES_BASE_URL)
+        Uri builtUri = Uri.parse(POPULAR_MOVIES_BASE_URL)
                 .buildUpon()
                 .appendQueryParameter(API_KEY, API_KEY_VALUE)
-                .appendQueryParameter(SORT_BY, "popular.desc")
                 .build();
 
         try {
@@ -52,10 +52,9 @@ public class NetworkUtils {
     public static URL topRatedMoviesUrl () {
         URL queryUrl = null;
 
-        Uri builtUri = Uri.parse(MOVIES_BASE_URL)
+        Uri builtUri = Uri.parse(TOP_RATED_MOVIES_BASE_URL)
                 .buildUpon()
                 .appendQueryParameter(API_KEY, API_KEY_VALUE)
-                .appendQueryParameter(SORT_BY, "vote_average.desc")
                 .build();
 
         try {
