@@ -35,7 +35,7 @@ public class DetailActivity extends AppCompatActivity {
         mRating = findViewById(R.id.tv_vote_average);
         mOverview = findViewById(R.id.tv_overview);
 
-        Movie mMovie = (Movie) getIntent().getSerializableExtra(EXTRA_MOVIE_ID);
+        Movie mMovie = getIntent().getParcelableExtra(EXTRA_MOVIE_ID);
 
         populateUI(mMovie);
     }

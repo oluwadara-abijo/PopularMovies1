@@ -117,42 +117,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
         }
     }
 
-//    @SuppressLint("StaticFieldLeak")
-//    class MoviesAsyncTask extends AsyncTask<URL, Void, String> {
-//
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//            mLoadingIndicator.setVisibility(View.VISIBLE);
-//        }
-//
-//        @Override
-//        protected String doInBackground(URL... urls) {
-//            URL url = urls[0];
-//            String jsonResponse = null;
-//            try {
-//                jsonResponse = NetworkUtils.getResponseFromHttpUrl(url);
-//                Log.d(">>>>", "RESPONSE" + jsonResponse);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            return jsonResponse;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(String result) {
-//            mLoadingIndicator.setVisibility(View.INVISIBLE);
-//            if (result != null && !result.equals("")) {
-//                mList = MoviesJsonUtils.extractMoviesFromJson(result);
-//                mAdapter = new MovieAdapter(mList, MainActivity.this);
-//                mRecyclerView.setAdapter(mAdapter);
-//                showData();
-//            } else {
-//                showError();
-//            }
-//        }
-//    }
-
     @Override
     public void onItemClickListener(Movie movie) {
         Intent intent = new Intent(MainActivity.this, DetailActivity.class);
