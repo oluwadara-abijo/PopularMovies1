@@ -14,8 +14,8 @@
         <TextView
             android:id="@+id/tv_movie_title"
             style="@style/TextTheme"
-            android:padding="16dp"
             android:gravity="center"
+            android:padding="16dp"
             android:textAllCaps="true"
             android:textSize="36sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -30,7 +30,7 @@
             android:layout_marginTop="8dp"
             android:contentDescription="@string/movie_poster"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_movie_title"/>
+            app:layout_constraintTop_toBottomOf="@+id/tv_movie_title" />
 
         <TextView
             android:id="@+id/tv_release_year_label"
@@ -48,10 +48,10 @@
             android:id="@+id/tv_release_date"
             style="@style/TextTheme"
             android:layout_marginTop="4dp"
+            android:gravity="center"
             android:textSize="24sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/movie_poster"
+            app:layout_constraintEnd_toEndOf="@+id/tv_release_year_label"
+            app:layout_constraintStart_toStartOf="@+id/tv_release_year_label"
             app:layout_constraintTop_toBottomOf="@+id/tv_release_year_label" />
 
         <TextView
@@ -69,11 +69,12 @@
         <TextView
             android:id="@+id/tv_vote_average"
             style="@style/TextTheme"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
             android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/movie_poster"
+            app:layout_constraintEnd_toEndOf="@+id/tv_vote_average_label"
+            app:layout_constraintStart_toStartOf="@+id/tv_vote_average_label"
             app:layout_constraintTop_toBottomOf="@+id/tv_vote_average_label" />
 
         <TextView

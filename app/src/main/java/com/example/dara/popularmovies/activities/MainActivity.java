@@ -1,16 +1,13 @@
 package com.example.dara.popularmovies.activities;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,16 +18,16 @@ import android.widget.TextView;
 import com.example.dara.popularmovies.model.Movie;
 import com.example.dara.popularmovies.model.MovieAdapter;
 import com.example.dara.popularmovies.R;
+import com.example.dara.popularmovies.utilities.MoviesAsyncTask;
 import com.example.dara.popularmovies.utilities.MoviesJsonUtils;
 import com.example.dara.popularmovies.utilities.NetworkUtils;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements MovieAdapter.ItemClickListener {
+public class MainActivity extends AppCompatActivity implements MovieAdapter.ItemClickListener, MoviesAsyncTask.OnTaskCompleted {
 
     private RecyclerView mRecyclerView;
 
@@ -78,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
     private void loadPopularMoviesData() {
         if (isNetworkAvailable()) {
             URL moviesUrl = NetworkUtils.popularMoviesUrl();
-            new MoviesAsyncTask().execute(moviesUrl);
+            new MoviesAsyncTask(this, mLoadingIndicator).execute(moviesUrl);
         } else {
             showError();
             mErrorMessageTextView.setText(R.string.network_error_message);
@@ -89,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
     private void loadTopRatedMoviesData() {
         if (isNetworkAvailable()) {
             URL moviesUrl = NetworkUtils.topRatedMoviesUrl();
-            new MoviesAsyncTask().execute(moviesUrl);
+            new MoviesAsyncTask(this, mLoadingIndicator).execute(moviesUrl);
         } else {
             showError();
             mErrorMessageTextView.setText(R.string.network_error_message);
@@ -107,41 +104,54 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
         mErrorMessageTextView.setVisibility(View.VISIBLE);
     }
 
-    @SuppressLint("StaticFieldLeak")
-    class MoviesAsyncTask extends AsyncTask<URL, Void, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mLoadingIndicator.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected String doInBackground(URL... urls) {
-            URL url = urls[0];
-            String jsonResponse = null;
-            try {
-                jsonResponse = NetworkUtils.getResponseFromHttpUrl(url);
-                Log.d(">>>>", "RESPONSE" + jsonResponse);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return jsonResponse;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            mLoadingIndicator.setVisibility(View.INVISIBLE);
-            if (result != null && !result.equals("")) {
-                mList = MoviesJsonUtils.extractMoviesFromJson(result);
-                mAdapter = new MovieAdapter(mList, MainActivity.this);
-                mRecyclerView.setAdapter(mAdapter);
-                showData();
-            } else {
-                showError();
-            }
+    @Override
+    public void onTaskCompleted(String result) {
+        mLoadingIndicator.setVisibility(View.INVISIBLE);
+        if (result != null && !result.equals("")) {
+            mList = MoviesJsonUtils.extractMoviesFromJson(result);
+            mAdapter = new MovieAdapter(mList, MainActivity.this);
+            mRecyclerView.setAdapter(mAdapter);
+            showData();
+        } else {
+            showError();
         }
     }
+
+//    @SuppressLint("StaticFieldLeak")
+//    class MoviesAsyncTask extends AsyncTask<URL, Void, String> {
+//
+//        @Override
+//        protected void onPreExecute() {
+//            super.onPreExecute();
+//            mLoadingIndicator.setVisibility(View.VISIBLE);
+//        }
+//
+//        @Override
+//        protected String doInBackground(URL... urls) {
+//            URL url = urls[0];
+//            String jsonResponse = null;
+//            try {
+//                jsonResponse = NetworkUtils.getResponseFromHttpUrl(url);
+//                Log.d(">>>>", "RESPONSE" + jsonResponse);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            return jsonResponse;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            mLoadingIndicator.setVisibility(View.INVISIBLE);
+//            if (result != null && !result.equals("")) {
+//                mList = MoviesJsonUtils.extractMoviesFromJson(result);
+//                mAdapter = new MovieAdapter(mList, MainActivity.this);
+//                mRecyclerView.setAdapter(mAdapter);
+//                showData();
+//            } else {
+//                showError();
+//            }
+//        }
+//    }
 
     @Override
     public void onItemClickListener(Movie movie) {
