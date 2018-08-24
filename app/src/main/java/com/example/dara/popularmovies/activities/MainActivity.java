@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -27,9 +28,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements MovieAdapter.ItemClickListener, MoviesAsyncTask.OnTaskCompleted {
+public class MainActivity extends AppCompatActivity implements MovieAdapter.ItemClickListener,
+        MoviesAsyncTask.OnTaskCompleted {
 
     private RecyclerView mRecyclerView;
+
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private ProgressBar mLoadingIndicator;
 
@@ -50,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
 
         mLoadingIndicator = findViewById(R.id.loading_indicator);
 
+        mSwipeRefreshLayout = findViewById(R.id.swipe_refresh);
+
         mList = new ArrayList<>();
 
         mAdapter = new MovieAdapter(mList, this);
@@ -63,12 +69,22 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
         mRecyclerView.setAdapter(mAdapter);
 
         loadPopularMoviesData();
+
+        mSwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        loadPopularMoviesData();
+                    }
+                }
+        );
     }
 
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = Objects.requireNonNull(connectivityManager).getActiveNetworkInfo();
+        NetworkInfo activeNetworkInfo = Objects.requireNonNull(connectivityManager)
+                .getActiveNetworkInfo();
         return activeNetworkInfo != null;
     }
 
@@ -80,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
             showError();
             mErrorMessageTextView.setText(R.string.network_error_message);
         }
+        mSwipeRefreshLayout.setRefreshing(false);
 
     }
 
@@ -91,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
             showError();
             mErrorMessageTextView.setText(R.string.network_error_message);
         }
-
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     private void showData() {
@@ -122,7 +139,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
         Intent intent = new Intent(MainActivity.this, DetailActivity.class);
         intent.putExtra(DetailActivity.EXTRA_MOVIE_ID, movie);
         startActivity(intent);
-
     }
 
     @Override
@@ -138,6 +154,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
 
         switch (id) {
             case R.id.action_refresh:
+                mSwipeRefreshLayout.setRefreshing(true);
             case R.id.action_sort_by_popularity:
                 mRecyclerView.setAdapter(null);
                 loadPopularMoviesData();

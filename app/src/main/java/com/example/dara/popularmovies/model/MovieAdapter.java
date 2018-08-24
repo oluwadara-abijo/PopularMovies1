@@ -18,13 +18,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     //List object that holds movie data
     private final List<Movie> mMovieData;
 
+    private final ItemClickListener mItemClickListener;
+
     //Constructor
     public MovieAdapter(List<Movie> data, ItemClickListener clickListener) {
         mMovieData = data;
         mItemClickListener = clickListener;
     }
-
-    private final ItemClickListener mItemClickListener;
 
     //Interface for click handling
     public interface ItemClickListener {
