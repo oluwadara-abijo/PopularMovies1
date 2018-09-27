@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.dara.popularmovies.model.Movie;
+import com.example.dara.popularmovies.model.Trailer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,15 +15,58 @@ import java.util.List;
 
 public class MoviesJsonUtils {
 
-    private static String buildImageUrl(String posterPath) {
+    //Method to build url for poster path
+    private static String buildPosterUrl(String posterPath) {
         final String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/";
         final String IMAGE_SIZE = "w185";
         return IMAGE_BASE_URL+IMAGE_SIZE+posterPath;
     }
 
+    //Method to build url for backdrop path
+    private static String buildBackdropUrl(String posterPath) {
+        final String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/";
+        final String IMAGE_SIZE = "w342";
+        return IMAGE_BASE_URL + IMAGE_SIZE + posterPath;
+    }
+
     /**
-     * Return a Movie book object by parsing information
-     * about the movies from the input bookJSON string
+     * Returns a list of Trailer objects
+     */
+    public static List<Trailer> extractTrailersFromJson(String trailersJson) {
+        if (TextUtils.isEmpty(trailersJson)) {
+            return null;
+        }
+
+        //Create an empty ArrayList that trailers will be added to
+        List<Trailer> trailers = new ArrayList<>();
+
+        //Create a JSONObject from the response string
+        try {
+            JSONObject jsonObject = new JSONObject(trailersJson);
+
+            //Extract results array from the object
+            JSONArray jsonArray = jsonObject.getJSONArray("results");
+
+            //Loop trough the array
+            for (int i = 0; i<jsonArray.length(); i++) {
+                JSONObject currentTrailer = jsonArray.getJSONObject(i);
+
+                //Extract the trailer key
+                String trailer_key = currentTrailer.getString("key");
+
+                trailers.add(new Trailer(trailer_key));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e("Query Utils", "Problem parsing the book JSON results", e);
+        }
+
+        return trailers;
+    }
+
+    /**
+     * Returns a Movie object by parsing information
+     * about the movies from the input moviesJSON string
      */
     public static List<Movie> extractMoviesFromJson(String moviesJSON) {
         if (TextUtils.isEmpty(moviesJSON)) {
@@ -45,6 +89,9 @@ public class MoviesJsonUtils {
                 //Get movie JSONObject at position i
                 JSONObject currentMovie = resultsArray.optJSONObject(i);
 
+                //Extract "id" int
+                int movieId = currentMovie.optInt("id");
+
                 //Extract "vote_average" int
                 int voteAverage = currentMovie.optInt("vote_average");
 
@@ -53,7 +100,11 @@ public class MoviesJsonUtils {
 
                 //Extract "poster_path" for movie poster
                 String posterFilePath = currentMovie.optString("poster_path");
-                String posterUrl = buildImageUrl(posterFilePath);
+                String posterUrl = buildPosterUrl(posterFilePath);
+
+                //Extract "backdrop_path" for movie backdrop
+                String backdropFilePath = currentMovie.optString("backdrop_path");
+                String backdropUrl = buildBackdropUrl(backdropFilePath);
 
                 //Extract "overview" for movie overview
                 String overview = currentMovie.optString("overview");
@@ -62,11 +113,11 @@ public class MoviesJsonUtils {
                 String releaseDate = currentMovie.optString("release_date");
 
                 //Add the new Movie to the list of movies
-                movies.add(new Movie(title, posterUrl, overview, releaseDate, voteAverage));
+                movies.add(new Movie(movieId, title, posterUrl, backdropUrl, overview, releaseDate, voteAverage));
             }
 
         } catch (JSONException e) {
-            Log.e("Query Utils", "Problem parsing the book JSON results", e);
+            Log.e("Query Utils", "Problem parsing the movie JSON results", e);
         }
 
         return movies;

@@ -9,5 +9,11 @@
     <string name="synopsis_label">Synopsis:</string>
     <string name="rating_label">Rating</string>
     <string name="year_label">Year</string>
+    <string name="favourite_button">Favourite button</string>
+    <string name="movie_backdrop">Movie backdrop</string>
+    <string name="favourites_label">Favourites</string>
+    <string name="top_rated_label">Top Rated</string>
+    <string name="trailers_label">Trailers</string>
+    <string name="movie_trailer">Movie trailer</string>
 
 </resources>

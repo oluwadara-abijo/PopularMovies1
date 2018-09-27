@@ -4,6 +4,8 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.example.dara.popularmovies.BuildConfig;
+import com.example.dara.popularmovies.model.Movie;
+import com.example.dara.popularmovies.model.Trailer;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,10 +15,7 @@ import java.net.URL;
 import java.util.Scanner;
 
 public class NetworkUtils {
-    private static final String POPULAR_MOVIES_BASE_URL = "http://api.themoviedb.org/3/movie/popular";
-
-    private static final String TOP_RATED_MOVIES_BASE_URL = "http://api.themoviedb.org/3/movie/top_rated";
-
+    private static final String MOVIES_BASE_URL = "http://api.themoviedb.org/3/movie/";
 
     private static final String API_KEY_VALUE = BuildConfig.ApiKey;
 
@@ -24,13 +23,14 @@ public class NetworkUtils {
     private static final String API_KEY = "api_key";
 
     /**
-     * Returns new URL object based on popularity
+     * Build URL for most popular endpoint
      */
     public static URL popularMoviesUrl () {
         URL queryUrl = null;
 
-        Uri builtUri = Uri.parse(POPULAR_MOVIES_BASE_URL)
+        Uri builtUri = Uri.parse(MOVIES_BASE_URL)
                 .buildUpon()
+                .appendPath("popular")
                 .appendQueryParameter(API_KEY, API_KEY_VALUE)
                 .build();
 
@@ -47,13 +47,14 @@ public class NetworkUtils {
     }
 
     /**
-     * Returns new URL object based on top rated
+     * RBuild URL for top rated endpoint
      */
     public static URL topRatedMoviesUrl () {
         URL queryUrl = null;
 
-        Uri builtUri = Uri.parse(TOP_RATED_MOVIES_BASE_URL)
+        Uri builtUri = Uri.parse(MOVIES_BASE_URL)
                 .buildUpon()
+                .appendPath("top_rated")
                 .appendQueryParameter(API_KEY, API_KEY_VALUE)
                 .build();
 
@@ -66,6 +67,51 @@ public class NetworkUtils {
         return queryUrl;
 
     }
+
+    /**
+     * Builds URL for videos endpoint
+     */
+    public static URL trailersUrl(Movie movie) {
+        URL queryUrl = null;
+
+        Uri builtUri = Uri.parse(MOVIES_BASE_URL)
+                .buildUpon()
+                .appendPath(String.valueOf(movie.getMovieId()))
+                .appendPath("videos")
+                .appendQueryParameter(API_KEY, API_KEY_VALUE)
+                .build();
+
+        try {
+            queryUrl = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return queryUrl;
+    }
+
+    /**
+     * Builds YouTube URL for trailer
+     */
+    public static  URL buildYouTubeLink (Trailer trailer) {
+        final String YOUTUBE_BASE_URL = "https://www.youtube.com/watch";
+
+        URL queryUrl = null;
+
+        Uri builtUri = Uri.parse(YOUTUBE_BASE_URL)
+                .buildUpon()
+                .appendQueryParameter("v", trailer.getKey())
+                .build();
+
+        try {
+            queryUrl = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return queryUrl;
+    }
+
 
     /**
      * This method returns the entire result from the HTTP response.
