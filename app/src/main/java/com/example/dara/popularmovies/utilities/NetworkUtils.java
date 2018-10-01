@@ -69,6 +69,28 @@ public class NetworkUtils {
     }
 
     /**
+     * Builds URL for reviews endpoint
+     */
+    public static URL reviewsUrl(Movie movie) {
+        URL queryUrl = null;
+
+        Uri builtUri = Uri.parse(MOVIES_BASE_URL)
+                .buildUpon()
+                .appendPath(String.valueOf(movie.getMovieId()))
+                .appendPath("reviews")
+                .appendQueryParameter(API_KEY, API_KEY_VALUE)
+                .build();
+
+        try {
+            queryUrl = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return queryUrl;
+    }
+
+    /**
      * Builds URL for videos endpoint
      */
     public static URL trailersUrl(Movie movie) {

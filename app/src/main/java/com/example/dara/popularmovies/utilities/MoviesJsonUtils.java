@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.dara.popularmovies.model.Movie;
+import com.example.dara.popularmovies.model.Review;
 import com.example.dara.popularmovies.model.Trailer;
 
 import org.json.JSONArray;
@@ -47,6 +48,11 @@ public class MoviesJsonUtils {
             //Extract results array from the object
             JSONArray jsonArray = jsonObject.getJSONArray("results");
 
+            if (jsonArray.length() == 0) {
+                Log.d("MoviesJsonUtils", "No trailers");
+                return null;
+            }
+
             //Loop trough the array
             for (int i = 0; i<jsonArray.length(); i++) {
                 JSONObject currentTrailer = jsonArray.getJSONObject(i);
@@ -55,14 +61,61 @@ public class MoviesJsonUtils {
                 String trailer_key = currentTrailer.getString("key");
 
                 trailers.add(new Trailer(trailer_key));
+                Log.d("MoviesJsonUtils", String.valueOf(trailers));
+
+
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.e("Query Utils", "Problem parsing the book JSON results", e);
+            Log.e("MoviesJsonUtils", "Problem parsing the book JSON results", e);
         }
 
         return trailers;
     }
+
+    /**
+     * Returns a list of Trailer objects
+     */
+    public static List<Review> extractReviewsFromJson(String reviewsJson) {
+        if (TextUtils.isEmpty(reviewsJson)) {
+            return null;
+        }
+
+        //Create an empty ArrayList that reviews will be added to
+        List<Review> reviews = new ArrayList<>();
+
+        //Create a JSONObject from the response string
+        try {
+            JSONObject jsonObject = new JSONObject(reviewsJson);
+
+            //Extract results array from the object
+            JSONArray jsonArray = jsonObject.optJSONArray("results");
+
+            if (jsonArray.length() == 0) {
+                Log.d("MoviesJsonUtils", "No reviews");
+                return null;
+            }
+
+            //Loop trough the array
+            for (int i = 0; i<jsonArray.length(); i++) {
+                JSONObject currentReview = jsonArray.getJSONObject(i);
+
+                //Extract the review author
+                String review_author = currentReview.getString("author");
+
+                //Extract the review content
+                String review_content = currentReview.getString("content");
+
+                reviews.add(new Review(review_author, review_content));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e("MoviesJsonUtils", "Problem parsing the book JSON results", e);
+        }
+
+        return reviews;
+    }
+
 
     /**
      * Returns a Movie object by parsing information
@@ -117,7 +170,7 @@ public class MoviesJsonUtils {
             }
 
         } catch (JSONException e) {
-            Log.e("Query Utils", "Problem parsing the movie JSON results", e);
+            Log.e("MoviesJsonUtils", "Problem parsing the movie JSON results", e);
         }
 
         return movies;

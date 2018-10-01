@@ -11,10 +11,10 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:contentDescription="@string/movie_backdrop"
             android:id="@+id/movie_backdrop"
             android:layout_width="0dp"
             android:layout_height="150dp"
+            android:contentDescription="@string/movie_backdrop"
             android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -23,9 +23,9 @@
 
         <ProgressBar
             android:id="@+id/loading_indicator"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_movie_title"
@@ -106,11 +106,11 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_overview_label" />
 
         <ImageButton
-            android:contentDescription="@string/favourite_button"
             android:id="@+id/favourites_button"
             style="?android:borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/favourite_button"
             app:layout_constraintStart_toStartOf="@+id/tv_movie_title"
             app:layout_constraintTop_toBottomOf="@+id/tv_movie_title" />
 
@@ -126,11 +126,12 @@
             app:layout_constraintTop_toBottomOf="@id/tv_overview" />
 
         <HorizontalScrollView
+            android:id="@+id/trailers_scroll_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="16dp"
-            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:paddingBottom="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/trailer_label"
@@ -147,10 +148,10 @@
                     android:layout_width="150dp"
                     android:layout_height="100dp"
                     android:layout_marginStart="8dp"
+                    android:contentDescription="@string/movie_trailer"
                     android:src="@drawable/ic_play_circle_outline_black_24dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:contentDescription="@string/movie_trailer"
                     app:layout_constraintVertical_bias="1.0" />
 
                 <ImageButton
@@ -158,10 +159,11 @@
                     android:layout_width="150dp"
                     android:layout_height="100dp"
                     android:layout_marginStart="8dp"
+                    android:contentDescription="@string/movie_trailer"
                     android:src="@drawable/ic_play_circle_outline_black_24dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:contentDescription="@string/movie_trailer"
                     app:layout_constraintVertical_bias="1.0" />
 
                 <ImageButton
@@ -169,16 +171,75 @@
                     android:layout_width="150dp"
                     android:layout_height="100dp"
                     android:layout_marginStart="8dp"
+                    android:contentDescription="@string/movie_trailer"
                     android:src="@drawable/ic_play_circle_outline_black_24dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintVertical_bias="1.0"
-                    android:contentDescription="@string/movie_trailer" />
+                    app:layout_constraintVertical_bias="1.0" />
 
             </LinearLayout>
 
-
         </HorizontalScrollView>
+
+        <TextView
+            android:id="@+id/reviews_label"
+            style="@style/TextLabelTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/reviews_label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/trailers_scroll_view" />
+
+        <LinearLayout
+            android:id="@+id/reviews_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/reviews_label">
+
+            <TextView
+                android:id="@+id/tv_review1"
+                style="@style/TextTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:paddingLeft="@dimen/item_padding_16"
+                android:paddingRight="@dimen/item_padding_16"
+                android:textSize="16sp" />
+
+            <at.blogc.android.views.ExpandableTextView
+                android:id="@+id/tv_review2"
+                style="@style/TextTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:paddingLeft="@dimen/item_padding_16"
+                android:paddingRight="@dimen/item_padding_16"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+            <at.blogc.android.views.ExpandableTextView
+                android:id="@+id/tv_review3"
+                style="@style/TextTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:paddingLeft="@dimen/item_padding_16"
+                android:paddingRight="@dimen/item_padding_16"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+        </LinearLayout>
 
     </android.support.constraint.ConstraintLayout>
 

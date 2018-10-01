@@ -34,6 +34,7 @@ public class MoviesAsyncTask extends AsyncTask<URL, Void, String> {
     @Override
     protected String doInBackground(URL... urls) {
         URL url = urls[0];
+        Log.d(">>>Param", url.toString());
         String jsonResponse = null;
         try {
             jsonResponse = NetworkUtils.getResponseFromHttpUrl(url);

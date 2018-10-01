@@ -15,5 +15,6 @@
     <string name="top_rated_label">Top Rated</string>
     <string name="trailers_label">Trailers</string>
     <string name="movie_trailer">Movie trailer</string>
+    <string name="reviews_label">Reviews</string>
 
 </resources>
