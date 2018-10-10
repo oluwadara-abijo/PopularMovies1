@@ -163,6 +163,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
                 mRecyclerView.setAdapter(null);
                 loadTopRatedMoviesData();
                 return true;
+            case R.id.action_sort_by_favourites:
+                Intent intent = new Intent(MainActivity.this, FavouritesActivity.class);
+                startActivity(intent);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

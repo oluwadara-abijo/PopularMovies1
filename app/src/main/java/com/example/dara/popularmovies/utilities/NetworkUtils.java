@@ -134,7 +134,6 @@ public class NetworkUtils {
         return queryUrl;
     }
 
-
     /**
      * This method returns the entire result from the HTTP response.
      *

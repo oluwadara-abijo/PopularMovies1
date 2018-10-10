@@ -20,4 +20,10 @@
         app:showAsAction="never"
         android:orderInCategory="2"/>
 
+    <item
+        android:id="@+id/action_sort_by_favourites"
+        android:title="@string/favourites_label"
+        app:showAsAction="never"
+        android:orderInCategory="3"/>
+
 </menu>

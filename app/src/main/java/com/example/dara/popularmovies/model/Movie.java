@@ -1,29 +1,41 @@
 package com.example.dara.popularmovies.model;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+@Entity(tableName = "favourite_movies")
 public class Movie implements Parcelable {
 
     //Movie id
+    @PrimaryKey
+    @ColumnInfo(name = "id")
     private final int mMovieId;
 
     //Title of movie
+    @ColumnInfo(name = "title")
     private final String mTitle;
 
     //Movie poster path
+    @ColumnInfo(name = "poster")
     private final String mPosterUrl;
 
     //Movie backdrop path
+    @ColumnInfo(name = "backdrop")
     private final String mBackdropUrl;
 
     //Movie overview
+    @ColumnInfo(name = "synopsis")
     private final String mOverview;
 
     //Movie release date
+    @ColumnInfo(name = "release_date")
     private final String mReleaseDate;
 
     //Movie vote average
+    @ColumnInfo(name = "user_rating")
     private final int mVoteAverage;
 
     //Constructor which creates an object of the Movies object
@@ -60,23 +72,31 @@ public class Movie implements Parcelable {
         }
     };
 
-    //Getter methods for fields
-    public int getMovieId () { return mMovieId;}
+    //Getter and setter methods for fields
+    public int getMovieId() {
+        return mMovieId;
+    }
+
     public String getTitle() {
         return mTitle;
     }
+
     public String getPosterUrl() {
         return mPosterUrl;
     }
-    public String getPBackdropUrl() {
+
+    public String getBackdropUrl() {
         return mBackdropUrl;
     }
+
     public String getOverview() {
         return mOverview;
     }
+
     public String getReleaseDate() {
         return mReleaseDate;
     }
+
     public int getVoteAverage() {
         return mVoteAverage;
     }

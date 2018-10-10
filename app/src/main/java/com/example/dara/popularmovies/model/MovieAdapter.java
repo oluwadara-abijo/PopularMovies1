@@ -16,13 +16,13 @@ import java.util.List;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder> {
 
     //List object that holds movie data
-    private final List<Movie> mMovieData;
+    private List<Movie> mMovies;
 
     private final ItemClickListener mItemClickListener;
 
     //Constructor
     public MovieAdapter(List<Movie> data, ItemClickListener clickListener) {
-        mMovieData = data;
+        mMovies = data;
         mItemClickListener = clickListener;
     }
 
@@ -42,7 +42,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     @Override
     public void onBindViewHolder(@NonNull MovieAdapterViewHolder holder, int position) {
-        Movie currentMovie = mMovieData.get(position);
+        Movie currentMovie = mMovies.get(position);
 
         Picasso.get()
                 .load(currentMovie.getPosterUrl())
@@ -54,7 +54,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     @Override
     public int getItemCount() {
-        return mMovieData.size();
+        return mMovies.size();
+    }
+
+    /**
+     * When data changes, this method updates the list of favourite movies
+     * and notifies the adapter to use the new values on it
+     */
+    public void setFavouriteMovies(List<Movie> movies) {
+        mMovies = movies;
+        notifyDataSetChanged();
     }
 
     //ViewHolder inner class
@@ -71,7 +80,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         @Override
         public void onClick(View view) {
             int position = getAdapterPosition();
-            mItemClickListener.onItemClickListener(mMovieData.get(position));
+            mItemClickListener.onItemClickListener(mMovies.get(position));
         }
     }
 }
