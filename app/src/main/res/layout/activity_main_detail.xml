@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.DetailActivity">
+    tools:context=".activities.MainDetailActivity">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -44,9 +44,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:gravity="start"
-            android:textStyle="bold"
             android:padding="8dp"
             android:textSize="22sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/movie_poster"
             app:layout_constraintTop_toTopOf="@+id/movie_poster" />
@@ -56,10 +56,10 @@
             style="@style/TextTheme"
             android:layout_marginStart="8dp"
             android:gravity="center"
-            app:layout_constraintTop_toBottomOf="@id/tv_movie_title"
             android:textColor="@color/colorAccent"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="@+id/tv_movie_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_movie_title"
             tools:layout_editor_absoluteY="271dp" />
 
         <TextView
@@ -76,8 +76,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="4dp"
-            android:rating="5"
             android:isIndicator="true"
+            android:rating="5"
             app:layout_constraintStart_toEndOf="@+id/tv_release_date"
             app:layout_constraintTop_toTopOf="@+id/tv_release_date" />
 
@@ -115,8 +115,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:src="@drawable/baseline_star_border_black_36"
             android:contentDescription="@string/favourite_button"
+            android:src="@drawable/baseline_star_border_black_36"
             app:layout_constraintStart_toStartOf="@+id/tv_release_date"
             app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
@@ -147,7 +147,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-
 
                 <ImageButton
                     android:id="@+id/trailer_1"

@@ -28,8 +28,10 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_keyboard_arrow_down_black_24dp" />
-                            <entry key="sourceFile" value="C:\Users\Dara" />
+                            <entry key="assetSourceType" value="FILE" />
+                            <entry key="outputName" value="ic_baseline_share_24px" />
+                            <entry key="overrideSize" value="true" />
+                            <entry key="sourceFile" value="C:\Users\Dara\Documents\Material Design - Icons\baseline-share-24px.svg" />
                           </map>
                         </option>
                       </PersistentState>

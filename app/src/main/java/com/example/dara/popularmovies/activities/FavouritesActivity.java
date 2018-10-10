@@ -1,19 +1,17 @@
 package com.example.dara.popularmovies.activities;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.dara.popularmovies.R;
-import com.example.dara.popularmovies.database.FavouritesDatabase;
 import com.example.dara.popularmovies.model.Movie;
 import com.example.dara.popularmovies.model.MovieAdapter;
 import com.example.dara.popularmovies.model.MovieViewModel;
@@ -23,7 +21,6 @@ import java.util.List;
 
 public class FavouritesActivity extends AppCompatActivity implements MovieAdapter.ItemClickListener {
 
-    private static final String TAG = FavouritesActivity.class.getSimpleName();
     private MovieAdapter mAdapter;
 
     @Override
@@ -36,25 +33,20 @@ public class FavouritesActivity extends AppCompatActivity implements MovieAdapte
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        //Get an instance of the database
-//        FavouritesDatabase mDatabase = FavouritesDatabase.getInstance(getApplicationContext());
-
-        RecyclerView mRecyclerView = findViewById(R.id.recycler_view);
         mAdapter = new MovieAdapter(new ArrayList<Movie>(), this);
 
         MovieViewModel mViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
 
-//        LiveData<List<Movie>> mList = mDatabase.favouritesDao().getAllFavouriteMovies();
         mViewModel.getFavMovies().observe(this, new Observer<List<Movie>>() {
             @Override
             public void onChanged(@Nullable List<Movie> movies) {
-                Log.d(TAG, "Updating list of tasks from LiveData in ViewModel");
                 mAdapter.setFavouriteMovies(movies);
             }
         });
 
+        //Set up recycler view
+        RecyclerView mRecyclerView = findViewById(R.id.recycler_view);
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
-
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setHasFixedSize(true);
@@ -62,6 +54,9 @@ public class FavouritesActivity extends AppCompatActivity implements MovieAdapte
 
     @Override
     public void onItemClickListener(Movie movie) {
+        Intent intent = new Intent(FavouritesActivity.this, FavouritesDetailActivity.class);
+        intent.putExtra(MainDetailActivity.EXTRA_MOVIE_ID, movie);
+        startActivity(intent);
 
     }
 

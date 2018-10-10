@@ -34,7 +34,8 @@ import at.blogc.android.views.ExpandableTextView;
 
 import static android.view.View.GONE;
 
-public class DetailActivity extends AppCompatActivity implements MoviesAsyncTask.OnTaskCompleted, View.OnClickListener {
+public class MainDetailActivity extends AppCompatActivity implements MoviesAsyncTask.OnTaskCompleted,
+        View.OnClickListener {
 
     private final String TAG = this.getClass().getSimpleName();
 
@@ -73,7 +74,7 @@ public class DetailActivity extends AppCompatActivity implements MoviesAsyncTask
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
+        setContentView(R.layout.activity_main_detail);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -110,6 +111,7 @@ public class DetailActivity extends AppCompatActivity implements MoviesAsyncTask
         mTrailer2Btn.setOnClickListener(this);
         mTrailer3Btn.setOnClickListener(this);
 
+        //Set on click listener on favourites button
         View.OnClickListener mFavButtonListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -119,14 +121,14 @@ public class DetailActivity extends AppCompatActivity implements MoviesAsyncTask
                     case R.drawable.baseline_star_black_36:
                         mFavouritesButton.setImageResource(R.drawable.baseline_star_border_black_36);
                         mFavouritesButton.setTag(R.drawable.baseline_star_border_black_36);
-                        Toast.makeText(DetailActivity.this, "Removed from favourites", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainDetailActivity.this, "Removed from favourites", Toast.LENGTH_SHORT).show();
                         mDb.favouritesDao().removeFromFavourites(mMovie);
                         break;
                     case R.drawable.baseline_star_border_black_36:
                     default:
                         mFavouritesButton.setImageResource(R.drawable.baseline_star_black_36);
                         mFavouritesButton.setTag(R.drawable.baseline_star_black_36);
-                        Toast.makeText(DetailActivity.this, "Added to favourites", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainDetailActivity.this, "Added to favourites", Toast.LENGTH_SHORT).show();
                         mDb.favouritesDao().addToFavourites(mMovie);
                         break;
                 }
