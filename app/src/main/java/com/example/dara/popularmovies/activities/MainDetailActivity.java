@@ -111,6 +111,19 @@ public class MainDetailActivity extends AppCompatActivity implements MoviesAsync
         mTrailer2Btn.setOnClickListener(this);
         mTrailer3Btn.setOnClickListener(this);
 
+        //Set on click listener on share button
+        ImageView mShareTrailer1 = findViewById(R.id.share_trailer);
+        mShareTrailer1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, trailer1Url.toString());
+                sendIntent.setType("text/plain");
+                startActivity(sendIntent);
+            }
+        });
+
         //Set on click listener on favourites button
         View.OnClickListener mFavButtonListener = new View.OnClickListener() {
             @Override

@@ -148,16 +148,30 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <ImageButton
-                    android:id="@+id/trailer_1"
-                    android:layout_width="150dp"
-                    android:layout_height="100dp"
-                    android:layout_marginStart="8dp"
-                    android:contentDescription="@string/movie_trailer"
-                    android:src="@drawable/ic_play_circle_outline_black_24dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintVertical_bias="1.0" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:id="@+id/trailer_1"
+                        android:layout_width="150dp"
+                        android:layout_height="100dp"
+                        android:layout_marginStart="8dp"
+                        android:contentDescription="@string/movie_trailer"
+                        android:src="@drawable/ic_play_circle_outline_black_24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintVertical_bias="1.0" />
+
+                    <ImageView
+                        android:id="@+id/share_trailer"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_margin="8dp"
+                        android:src="@drawable/ic_baseline_share_24px"
+                        android:contentDescription="@string/share" />
+                </LinearLayout>
 
                 <ImageButton
                     android:id="@+id/trailer_2"
