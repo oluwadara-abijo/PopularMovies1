@@ -2,6 +2,7 @@ package com.example.dara.popularmovies.activities;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,7 @@ import com.example.dara.popularmovies.R;
 import com.example.dara.popularmovies.database.FavouritesDatabase;
 import com.example.dara.popularmovies.model.Movie;
 import com.example.dara.popularmovies.model.MovieAdapter;
+import com.example.dara.popularmovies.model.MovieViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,16 +37,18 @@ public class FavouritesActivity extends AppCompatActivity implements MovieAdapte
         }
 
         //Get an instance of the database
-        FavouritesDatabase mDatabase = FavouritesDatabase.getInstance(getApplicationContext());
+//        FavouritesDatabase mDatabase = FavouritesDatabase.getInstance(getApplicationContext());
 
         RecyclerView mRecyclerView = findViewById(R.id.recycler_view);
-
-        LiveData<List<Movie>> mList = mDatabase.favouritesDao().getAllFavouriteMovies();
         mAdapter = new MovieAdapter(new ArrayList<Movie>(), this);
-        mList.observe(this, new Observer<List<Movie>>() {
+
+        MovieViewModel mViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
+
+//        LiveData<List<Movie>> mList = mDatabase.favouritesDao().getAllFavouriteMovies();
+        mViewModel.getFavMovies().observe(this, new Observer<List<Movie>>() {
             @Override
             public void onChanged(@Nullable List<Movie> movies) {
-                Log.d(TAG, "Receiving database update from LiveData");
+                Log.d(TAG, "Updating list of tasks from LiveData in ViewModel");
                 mAdapter.setFavouriteMovies(movies);
             }
         });
