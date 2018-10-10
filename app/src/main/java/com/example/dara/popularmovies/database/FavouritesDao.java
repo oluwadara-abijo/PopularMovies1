@@ -1,5 +1,6 @@
 package com.example.dara.popularmovies.database;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -14,7 +15,7 @@ import java.util.List;
 public interface FavouritesDao {
 
     @Query("SELECT * FROM favourite_movies")
-    List<Movie> getAllFavouriteMovies();
+    LiveData<List<Movie>> getAllFavouriteMovies();
 
     @Query("SELECT title FROM favourite_movies")
     List<String> getFavouriteTitles();
