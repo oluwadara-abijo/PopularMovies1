@@ -11,7 +11,7 @@ import java.util.List;
 
 public class MovieViewModel extends AndroidViewModel {
 
-    private LiveData<List<Movie>> favMovies;
+    private final LiveData<List<Movie>> favMovies;
 
     public MovieViewModel(@NonNull Application application) {
         super(application);

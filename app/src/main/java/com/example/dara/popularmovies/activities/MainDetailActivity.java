@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,12 +24,11 @@ import com.example.dara.popularmovies.model.Trailer;
 import com.example.dara.popularmovies.utilities.MoviesAsyncTask;
 import com.example.dara.popularmovies.utilities.MoviesJsonUtils;
 import com.example.dara.popularmovies.utilities.NetworkUtils;
+import com.ms.square.android.expandabletextview.ExpandableTextView;
 import com.squareup.picasso.Picasso;
 
 import java.net.URL;
 import java.util.List;
-
-import at.blogc.android.views.ExpandableTextView;
 
 import static android.view.View.GONE;
 
@@ -48,16 +46,16 @@ public class MainDetailActivity extends AppCompatActivity implements MoviesAsync
     private ImageView mBackdropImageView;
     private TextView mReleaseDate;
     private RatingBar mRating;
-    private TextView mOverview;
+    private ExpandableTextView mOverview;
     private TextView mTrailersLabel;
     private TextView mReviewsLabel;
     private ProgressBar mLoadingIndicator;
-    private TextView mReview1;
+    private ExpandableTextView mReview1;
     private ExpandableTextView mReview2;
     private ExpandableTextView mReview3;
-    private HorizontalScrollView mTrailersView;
     private LinearLayout mReviewsView;
-    private ImageButton mFavouritesButton;
+    private ImageView mFavouritesButton;
+    private ImageView mShareTrailerBtn;
 
     private Movie mMovie;
 
@@ -91,12 +89,12 @@ public class MainDetailActivity extends AppCompatActivity implements MoviesAsync
         mLoadingIndicator = findViewById(R.id.loading_indicator);
         mTrailersLabel = findViewById(R.id.trailer_label);
         mReviewsLabel = findViewById(R.id.reviews_label);
+        mShareTrailerBtn = findViewById(R.id.share_trailer);
 
         mReview1 = findViewById(R.id.tv_review1);
         mReview2 = findViewById(R.id.tv_review2);
         mReview3 = findViewById(R.id.tv_review3);
 
-        mTrailersView = findViewById(R.id.trailers_scroll_view);
         mReviewsView = findViewById(R.id.reviews_layout);
 
         mTrailer1Btn = findViewById(R.id.trailer_1);
@@ -112,8 +110,7 @@ public class MainDetailActivity extends AppCompatActivity implements MoviesAsync
         mTrailer3Btn.setOnClickListener(this);
 
         //Set on click listener on share button
-        ImageView mShareTrailer1 = findViewById(R.id.share_trailer);
-        mShareTrailer1.setOnClickListener(new View.OnClickListener() {
+        mShareTrailerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent sendIntent = new Intent();
@@ -131,16 +128,16 @@ public class MainDetailActivity extends AppCompatActivity implements MoviesAsync
                 Integer tag = (Integer) mFavouritesButton.getTag();
                 tag = tag == null ? 0 : tag;
                 switch (tag) {
-                    case R.drawable.baseline_star_black_36:
-                        mFavouritesButton.setImageResource(R.drawable.baseline_star_border_black_36);
-                        mFavouritesButton.setTag(R.drawable.baseline_star_border_black_36);
+                    case R.drawable.ic_baseline_star_24px:
+                        mFavouritesButton.setImageResource(R.drawable.ic_baseline_star_border_24px);
+                        mFavouritesButton.setTag(R.drawable.ic_baseline_star_border_24px);
                         Toast.makeText(MainDetailActivity.this, "Removed from favourites", Toast.LENGTH_SHORT).show();
                         mDb.favouritesDao().removeFromFavourites(mMovie);
                         break;
-                    case R.drawable.baseline_star_border_black_36:
+                    case R.drawable.ic_baseline_star_border_24px:
                     default:
-                        mFavouritesButton.setImageResource(R.drawable.baseline_star_black_36);
-                        mFavouritesButton.setTag(R.drawable.baseline_star_black_36);
+                        mFavouritesButton.setImageResource(R.drawable.ic_baseline_star_24px);
+                        mFavouritesButton.setTag(R.drawable.ic_baseline_star_24px);
                         Toast.makeText(MainDetailActivity.this, "Added to favourites", Toast.LENGTH_SHORT).show();
                         mDb.favouritesDao().addToFavourites(mMovie);
                         break;
@@ -149,9 +146,10 @@ public class MainDetailActivity extends AppCompatActivity implements MoviesAsync
         };
         mFavouritesButton.setOnClickListener(mFavButtonListener);
 
-        populateUI();
-
         checkIfFav();
+        getTrailers();
+        getReviews();
+        populateUI();
 
     }
 
@@ -167,9 +165,9 @@ public class MainDetailActivity extends AppCompatActivity implements MoviesAsync
 
     }
 
-    private String createThumbnail (Trailer trailer) {
+    private String createThumbnail(Trailer trailer) {
         String videoId = trailer.getKey();
-        String thumbnail =  "https://img.youtube.com/vi/"+ videoId + "/0.jpg";
+        String thumbnail = "https://img.youtube.com/vi/" + videoId + "/0.jpg";
         Log.d("TAG>>", thumbnail);
         return thumbnail;
     }
@@ -178,30 +176,7 @@ public class MainDetailActivity extends AppCompatActivity implements MoviesAsync
     public void onTaskCompleted(String result) {
         mLoadingIndicator.setVisibility(GONE);
         if (result != null && !result.equals("")) {
-            if (result.contains("id") && result.contains("results")) {
-                List<Trailer> trailers = MoviesJsonUtils.extractTrailersFromJson(result);
-                if (trailers == null) {
-                    mTrailersView.setVisibility(GONE);
-                    mTrailersLabel.setVisibility(GONE);
-                } else if (trailers.size() > 0) {
-                    trailer1Url = NetworkUtils.buildYouTubeLink(trailers.get(0));
-                    Trailer trailer1 = trailers.get(0);
-                    Picasso.get().load(createThumbnail(trailer1)).into(mTrailer1Btn);
-                    if (trailers.size() > 1) {
-                        mTrailer2Btn.setVisibility(View.VISIBLE);
-                        trailer2Url = NetworkUtils.buildYouTubeLink(trailers.get(1));
-                        Trailer trailer2 = trailers.get(1);
-                        Picasso.get().load(createThumbnail(trailer2)).into(mTrailer2Btn);
-                    }
-                    if (trailers.size() > 2) {
-                        mTrailer3Btn.setVisibility(View.VISIBLE);
-                        trailer3Url = NetworkUtils.buildYouTubeLink(trailers.get(2));
-                        Trailer trailer3 = trailers.get(2);
-                        Picasso.get().load(createThumbnail(trailer3)).into(mTrailer3Btn);
-                    }
-                }
-            }
-            if (result.contains("id") && result.contains("page") && result.contains("results")) {
+            if (result.contains("total_pages") && result.contains("total_results")) {
                 List<Review> reviews = MoviesJsonUtils.extractReviewsFromJson(result);
                 if (reviews == null) {
                     mReviewsView.setVisibility(GONE);
@@ -220,6 +195,29 @@ public class MainDetailActivity extends AppCompatActivity implements MoviesAsync
                         mReview3.setText(review3);
                     }
                 }
+            } else {
+                List<Trailer> trailers = MoviesJsonUtils.extractTrailersFromJson(result);
+                if (trailers == null) {
+                    mShareTrailerBtn.setVisibility(GONE);
+                    mTrailersLabel.setVisibility(GONE);
+                } else if (trailers.size() > 0) {
+                    mTrailer1Btn.setVisibility(View.VISIBLE);
+                    trailer1Url = NetworkUtils.buildYouTubeLink(trailers.get(0));
+                    Trailer trailer1 = trailers.get(0);
+                    Picasso.get().load(createThumbnail(trailer1)).into(mTrailer1Btn);
+                    if (trailers.size() > 1) {
+                        mTrailer2Btn.setVisibility(View.VISIBLE);
+                        trailer2Url = NetworkUtils.buildYouTubeLink(trailers.get(1));
+                        Trailer trailer2 = trailers.get(1);
+                        Picasso.get().load(createThumbnail(trailer2)).into(mTrailer2Btn);
+                    }
+                    if (trailers.size() > 2) {
+                        mTrailer3Btn.setVisibility(View.VISIBLE);
+                        trailer3Url = NetworkUtils.buildYouTubeLink(trailers.get(2));
+                        Trailer trailer3 = trailers.get(2);
+                        Picasso.get().load(createThumbnail(trailer3)).into(mTrailer3Btn);
+                    }
+                }
             }
         }
 
@@ -227,9 +225,6 @@ public class MainDetailActivity extends AppCompatActivity implements MoviesAsync
 
     private void populateUI() {
         if (mMovie == null) return;
-
-        getTrailers();
-        getReviews();
 
         //Set movie release year
         String releaseDate = mMovie.getReleaseDate();
@@ -268,9 +263,9 @@ public class MainDetailActivity extends AppCompatActivity implements MoviesAsync
         Log.d(TAG, String.valueOf(favTitles));
         for (String title : favTitles) {
             if (title.equals(mMovie.getTitle())) {
-                mFavouritesButton.setImageResource(R.drawable.baseline_star_black_36);
+                mFavouritesButton.setImageResource(R.drawable.ic_baseline_star_24px);
             } else {
-                mFavouritesButton.setImageResource(R.drawable.baseline_star_border_black_36);
+                mFavouritesButton.setImageResource(R.drawable.ic_baseline_star_border_24px);
             }
         }
     }

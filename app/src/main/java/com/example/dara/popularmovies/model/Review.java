@@ -5,9 +5,8 @@ public class Review {
     private final String mContent;
 
     //Constructor
-    public Review(String author, String content) {
+    public Review(String content) {
         //Declare fields
-        String mAuthor = author;
         this.mContent = content;
     }
 

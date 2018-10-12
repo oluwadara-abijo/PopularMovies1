@@ -23,11 +23,12 @@
         </activity>
         <activity
             android:name=".activities.MainDetailActivity"
-            android:label="Movie Info"></activity>
+            android:label="Movie Info" />
         <activity
             android:name=".activities.FavouritesActivity"
-            android:label="@string/favourites_label"></activity>
-        <activity android:name=".activities.FavouritesDetailActivity"></activity>
+            android:label="@string/favourites_label">
+        </activity>
+        <activity android:name=".activities.FavouritesDetailActivity" />
     </application>
 
 </manifest>

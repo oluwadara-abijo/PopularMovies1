@@ -100,13 +100,10 @@ public class MoviesJsonUtils {
             for (int i = 0; i<jsonArray.length(); i++) {
                 JSONObject currentReview = jsonArray.getJSONObject(i);
 
-                //Extract the review author
-                String review_author = currentReview.getString("author");
-
                 //Extract the review content
                 String review_content = currentReview.getString("content");
 
-                reviews.add(new Review(review_author, review_content));
+                reviews.add(new Review(review_content));
             }
         } catch (JSONException e) {
             e.printStackTrace();

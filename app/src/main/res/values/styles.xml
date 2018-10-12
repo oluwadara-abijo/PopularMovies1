@@ -15,7 +15,14 @@
         <item name="android:textColor">@color/colorPrimaryText</item>
     </style>
 
-    <style name="TextLabelTheme" parent="TextTheme">
+    <style name="LabelTextTheme" parent="TextTheme">
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginTop">24dp</item>
+        <item name="layout_constraintStart_toStartOf">parent</item>
+    </style>
+
+    <style name="DetailTextTheme" parent="TextTheme">
         <item name="android:textColor">@color/colorSecondaryText</item>
         <item name="android:textSize">@dimen/label_text_size</item>
     </style>
