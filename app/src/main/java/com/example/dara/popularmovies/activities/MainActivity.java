@@ -1,9 +1,12 @@
 package com.example.dara.popularmovies.activities;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +22,7 @@ import android.widget.TextView;
 import com.example.dara.popularmovies.model.Movie;
 import com.example.dara.popularmovies.model.MovieAdapter;
 import com.example.dara.popularmovies.R;
+import com.example.dara.popularmovies.model.MovieViewModel;
 import com.example.dara.popularmovies.utilities.MoviesAsyncTask;
 import com.example.dara.popularmovies.utilities.MoviesJsonUtils;
 import com.example.dara.popularmovies.utilities.NetworkUtils;
@@ -86,6 +90,18 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
         NetworkInfo activeNetworkInfo = Objects.requireNonNull(connectivityManager)
                 .getActiveNetworkInfo();
         return activeNetworkInfo != null;
+    }
+
+    private void loadFavouriteMovies() {
+        mAdapter = new MovieAdapter(new ArrayList<Movie>(), this);
+        MovieViewModel mViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
+        mViewModel.getFavMovies().observe(this, new Observer<List<Movie>>() {
+            @Override
+            public void onChanged(@Nullable List<Movie> movies) {
+                mAdapter.setFavouriteMovies(movies);
+            }
+        });
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     private void loadPopularMoviesData() {
@@ -156,18 +172,22 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
             case R.id.action_refresh:
                 mSwipeRefreshLayout.setRefreshing(true);
             case R.id.action_sort_by_popularity:
+                this.setTitle(R.string.app_name);
                 mRecyclerView.setAdapter(null);
                 loadPopularMoviesData();
                 return true;
             case R.id.action_sort_by_rating:
+                this.setTitle(R.string.sort_by_rating_label);
                 mRecyclerView.setAdapter(null);
                 loadTopRatedMoviesData();
                 return true;
             case R.id.action_sort_by_favourites:
-                Intent intent = new Intent(MainActivity.this, FavouritesActivity.class);
-                startActivity(intent);
+                this.setTitle(R.string.favourites_label);
+                mRecyclerView.setAdapter(null);
+                loadFavouriteMovies();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
 }
