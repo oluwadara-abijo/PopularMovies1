@@ -19,6 +19,8 @@ public class MovieViewModel extends AndroidViewModel {
         favMovies = database.favouritesDao().getAllFavouriteMovies();
     }
 
+    
+
     public LiveData<List<Movie>> getFavMovies() {
         return favMovies;
     }

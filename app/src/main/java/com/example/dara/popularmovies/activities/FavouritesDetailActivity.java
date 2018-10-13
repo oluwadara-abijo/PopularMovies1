@@ -4,11 +4,14 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.dara.popularmovies.R;
+import com.example.dara.popularmovies.database.FavouritesDatabase;
 import com.example.dara.popularmovies.model.Movie;
 import com.squareup.picasso.Picasso;
 
@@ -25,6 +28,10 @@ public class FavouritesDetailActivity extends AppCompatActivity {
     private TextView mReleaseDate;
     private RatingBar mRating;
     private TextView mOverview;
+    private ImageView mFavButton;
+
+    //Declare database object
+    private FavouritesDatabase mDb;
 
     private Movie mMovie;
 
@@ -39,20 +46,41 @@ public class FavouritesDetailActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        //Instantiate UI elements
         mTitleTextView = findViewById(R.id.tv_movie_title);
         mPosterImageView = findViewById(R.id.movie_poster);
         mBackdropImageView = findViewById(R.id.movie_backdrop);
         mReleaseDate = findViewById(R.id.tv_release_date);
         mRating = findViewById(R.id.tv_vote_average);
         mOverview = findViewById(R.id.tv_overview);
+        mFavButton = findViewById(R.id.favourites_button);
 
+        //Create an instance of the database
+        mDb = FavouritesDatabase.getInstance(getApplicationContext());
+
+        //Get the Movie object from the intent extra
         mMovie = getIntent().getParcelableExtra(EXTRA_MOVIE_ID);
+
+        //Set on click listener on favourites button
+        mFavButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Un-mark movie as favourite and remove movie from favourites database
+                mFavButton.setImageResource(R.drawable.ic_baseline_star_border_24px);
+                mDb.favouritesDao().removeFromFavourites(mMovie);
+                Toast.makeText(FavouritesDetailActivity.this, "Removed from favourites",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
 
         populateUI();
     }
 
     private void populateUI() {
         if (mMovie == null) return;
+
+        //Mark movie as favourite
+        mFavButton.setImageResource(R.drawable.ic_baseline_star_24px);
 
         //Set movie release year
         String releaseDate = mMovie.getReleaseDate();
