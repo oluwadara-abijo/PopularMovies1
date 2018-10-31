@@ -24,7 +24,9 @@
         <activity
             android:name=".activities.MainDetailActivity"
             android:label="Movie Info" />
-        <activity android:name=".activities.FavouritesDetailActivity" />
+        <activity
+            android:name=".activities.FavouritesDetailActivity"
+            android:label="Movie Info" />
     </application>
 
 </manifest>

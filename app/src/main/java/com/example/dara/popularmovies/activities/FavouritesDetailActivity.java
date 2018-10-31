@@ -35,7 +35,6 @@ public class FavouritesDetailActivity extends AppCompatActivity {
 
     private Movie mMovie;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -31,12 +31,6 @@
 
         </com.github.florent37.arclayout.ArcLayout>
 
-        <ProgressBar
-            android:id="@+id/loading_indicator"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:visibility="gone" />
-
         <ImageView
             android:id="@+id/movie_poster"
             android:layout_width="@dimen/image_width_small"

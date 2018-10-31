@@ -14,7 +14,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MoviesJsonUtils {
+class MoviesJsonUtils {
 
     //Method to build url for poster path
     private static String buildPosterUrl(String posterPath) {
@@ -33,7 +33,7 @@ public class MoviesJsonUtils {
     /**
      * Returns a list of Trailer objects
      */
-    public static List<Trailer> extractTrailersFromJson(String trailersJson) {
+    static List<Trailer> extractTrailersFromJson(String trailersJson) {
         if (TextUtils.isEmpty(trailersJson)) {
             return null;
         }
