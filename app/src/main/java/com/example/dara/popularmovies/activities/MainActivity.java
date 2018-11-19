@@ -24,10 +24,12 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.dara.popularmovies.model.Movie;
+import com.example.dara.popularmovies.database.Movie;
 import com.example.dara.popularmovies.model.MovieAdapter;
 import com.example.dara.popularmovies.R;
 import com.example.dara.popularmovies.model.MovieViewModel;
+import com.example.dara.popularmovies.ui.detail.FavouritesDetailActivity;
+import com.example.dara.popularmovies.ui.detail.MainDetailActivity;
 import com.example.dara.popularmovies.utilities.MovieLoader;
 import com.example.dara.popularmovies.utilities.NetworkUtils;
 

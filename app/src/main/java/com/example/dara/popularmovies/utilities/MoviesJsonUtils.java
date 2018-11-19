@@ -3,7 +3,7 @@ package com.example.dara.popularmovies.utilities;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.example.dara.popularmovies.model.Movie;
+import com.example.dara.popularmovies.database.Movie;
 import com.example.dara.popularmovies.model.Review;
 import com.example.dara.popularmovies.model.Trailer;
 

@@ -5,14 +5,12 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
-import com.example.dara.popularmovies.model.Movie;
-
 @Database(entities = {Movie.class}, version = 1, exportSchema = false)
 public abstract class FavouritesDatabase extends RoomDatabase {
 
     private static FavouritesDatabase sInstance;
     private static final Object LOCK = new Object();
-    private static final String DATABASE_NAME = "favourites";
+    private static final String DATABASE_NAME = "favourites_movies";
 
     public static FavouritesDatabase getInstance(Context context) {
         if (sInstance == null) {

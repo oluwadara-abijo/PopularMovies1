@@ -3,7 +3,7 @@ package com.example.dara.popularmovies.utilities;
 import android.net.Uri;
 
 import com.example.dara.popularmovies.BuildConfig;
-import com.example.dara.popularmovies.model.Movie;
+import com.example.dara.popularmovies.database.Movie;
 import com.example.dara.popularmovies.model.Trailer;
 
 import java.io.IOException;

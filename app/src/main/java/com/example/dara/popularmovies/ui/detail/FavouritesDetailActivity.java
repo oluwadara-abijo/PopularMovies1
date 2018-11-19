@@ -1,5 +1,6 @@
-package com.example.dara.popularmovies.activities;
+package com.example.dara.popularmovies.ui.detail;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,7 +13,7 @@ import android.widget.Toast;
 
 import com.example.dara.popularmovies.R;
 import com.example.dara.popularmovies.database.FavouritesDatabase;
-import com.example.dara.popularmovies.model.Movie;
+import com.example.dara.popularmovies.database.Movie;
 import com.squareup.picasso.Picasso;
 
 
@@ -33,8 +34,11 @@ public class FavouritesDetailActivity extends AppCompatActivity {
     //Declare database object
     private FavouritesDatabase mDb;
 
+    //Current movie
     private Movie mMovie;
 
+    //ViewModel object
+    private FavouritesDetailActivityViewModel mViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +60,9 @@ public class FavouritesDetailActivity extends AppCompatActivity {
 
         //Create an instance of the database
         mDb = FavouritesDatabase.getInstance(getApplicationContext());
+
+        //Create new FavouritesDetailActivityViewModel instance
+        mViewModel = ViewModelProviders.of(this).get(FavouritesDetailActivityViewModel.class);
 
         //Get the Movie object from the intent extra
         mMovie = getIntent().getParcelableExtra(EXTRA_MOVIE_ID);

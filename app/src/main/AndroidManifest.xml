@@ -22,10 +22,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.MainDetailActivity"
+            android:name=".ui.detail.MainDetailActivity"
             android:label="Movie Info" />
         <activity
-            android:name=".activities.FavouritesDetailActivity"
+            android:name=".ui.detail.FavouritesDetailActivity"
             android:label="Movie Info" />
     </application>
 

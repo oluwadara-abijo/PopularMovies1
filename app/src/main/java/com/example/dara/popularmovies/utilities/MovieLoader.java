@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.AsyncTaskLoader;
 
-import com.example.dara.popularmovies.model.Movie;
+import com.example.dara.popularmovies.database.Movie;
 
 import java.io.IOException;
 import java.net.URL;

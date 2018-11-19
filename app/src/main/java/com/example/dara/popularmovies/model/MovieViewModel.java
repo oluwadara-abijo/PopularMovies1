@@ -6,6 +6,7 @@ import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
 import com.example.dara.popularmovies.database.FavouritesDatabase;
+import com.example.dara.popularmovies.database.Movie;
 
 import java.util.List;
 

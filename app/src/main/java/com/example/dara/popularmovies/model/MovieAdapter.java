@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.dara.popularmovies.R;
+import com.example.dara.popularmovies.database.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

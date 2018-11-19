@@ -1,4 +1,4 @@
-package com.example.dara.popularmovies.activities;
+package com.example.dara.popularmovies.ui.detail;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import com.example.dara.popularmovies.R;
 import com.example.dara.popularmovies.database.FavouritesDatabase;
-import com.example.dara.popularmovies.model.Movie;
+import com.example.dara.popularmovies.database.Movie;
 import com.example.dara.popularmovies.model.Review;
 import com.example.dara.popularmovies.model.Trailer;
 import com.example.dara.popularmovies.utilities.NetworkUtils;

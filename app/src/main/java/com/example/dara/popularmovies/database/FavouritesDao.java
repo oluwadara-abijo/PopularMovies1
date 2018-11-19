@@ -7,8 +7,6 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
-import com.example.dara.popularmovies.model.Movie;
-
 import java.util.List;
 
 @Dao
@@ -20,7 +18,7 @@ public interface FavouritesDao {
     @Query("SELECT title FROM favourite_movies")
     List<String> getFavouriteTitles();
 
-    @Insert (onConflict = OnConflictStrategy.IGNORE)
+    @Insert (onConflict = OnConflictStrategy.REPLACE)
     void addToFavourites(Movie movie);
 
     @Delete

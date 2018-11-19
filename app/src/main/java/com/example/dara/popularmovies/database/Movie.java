@@ -1,4 +1,4 @@
-package com.example.dara.popularmovies.model;
+package com.example.dara.popularmovies.database;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
