@@ -1,6 +1,5 @@
-package com.example.dara.popularmovies.activities;
+package com.example.dara.popularmovies.ui.activities;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +28,7 @@ import com.example.dara.popularmovies.model.MovieAdapter;
 import com.example.dara.popularmovies.R;
 import com.example.dara.popularmovies.model.MovieViewModel;
 import com.example.dara.popularmovies.ui.detail.FavouritesDetailActivity;
+import com.example.dara.popularmovies.ui.detail.FavouritesViewModel;
 import com.example.dara.popularmovies.ui.detail.MainDetailActivity;
 import com.example.dara.popularmovies.utilities.MovieLoader;
 import com.example.dara.popularmovies.utilities.NetworkUtils;
@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
 
     private boolean favView;
     private MovieViewModel mViewModel;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,13 +141,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
     }
 
     private void loadFavouriteMovies() {
-        mAdapter = new MovieAdapter(new ArrayList<Movie>(), this);
-        mViewModel.getFavMovies().observe(this, new Observer<List<Movie>>() {
-            @Override
-            public void onChanged(@Nullable List<Movie> movies) {
-                mAdapter.setFavouriteMovies(movies);
-            }
-        });
+        mAdapter = new MovieAdapter(new ArrayList<>(), this);
+        mViewModel.getFavMovies().observe(this, movies -> mAdapter.setFavouriteMovies(movies));
         mRecyclerView.setAdapter(mAdapter);
     }
 

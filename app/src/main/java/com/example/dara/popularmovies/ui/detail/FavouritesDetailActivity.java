@@ -38,7 +38,8 @@ public class FavouritesDetailActivity extends AppCompatActivity {
     private Movie mMovie;
 
     //ViewModel object
-    private FavouritesDetailActivityViewModel mViewModel;
+    private FavouritesViewModel mViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,58 +63,59 @@ public class FavouritesDetailActivity extends AppCompatActivity {
         mDb = FavouritesDatabase.getInstance(getApplicationContext());
 
         //Create new FavouritesDetailActivityViewModel instance
-        mViewModel = ViewModelProviders.of(this).get(FavouritesDetailActivityViewModel.class);
+        mViewModel = ViewModelProviders.of(this).get(FavouritesViewModel.class);
+        //Observe the LiveData
+        mViewModel.getMovie().observe(this, movie -> {
+            if (movie != null) {
+                populateUI(movie);
+            }
+        });
 
         //Get the Movie object from the intent extra
         mMovie = getIntent().getParcelableExtra(EXTRA_MOVIE_ID);
 
         //Set on click listener on favourites button
-        mFavButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Un-mark movie as favourite and remove movie from favourites database
-                mFavButton.setImageResource(R.drawable.ic_baseline_star_border_24px);
-                mDb.favouritesDao().removeFromFavourites(mMovie);
-                Toast.makeText(FavouritesDetailActivity.this, "Removed from favourites",
-                        Toast.LENGTH_SHORT).show();
-            }
+        mFavButton.setOnClickListener(v -> {
+            //Un-mark movie as favourite and remove movie from favourites database
+            mFavButton.setImageResource(R.drawable.ic_baseline_star_border_24px);
+            mDb.favouritesDao().removeFromFavourites(mMovie);
+            Toast.makeText(FavouritesDetailActivity.this, "Removed from favourites",
+                    Toast.LENGTH_SHORT).show();
         });
 
-        populateUI();
     }
 
-    private void populateUI() {
-        if (mMovie == null) return;
+    private void populateUI(Movie movie) {
 
         //Mark movie as favourite
         mFavButton.setImageResource(R.drawable.ic_baseline_star_24px);
 
         //Set movie release year
-        String releaseDate = mMovie.getReleaseDate();
+        String releaseDate = movie.getReleaseDate();
         String[] dateStrings = releaseDate.split("-");
         String releaseYear = dateStrings[0];
         mReleaseDate.setText(releaseYear);
 
         //Set movie title
-        mTitleTextView.setText(mMovie.getTitle());
+        mTitleTextView.setText(movie.getTitle());
 
         //Set movie rating
-        int voteAverage = mMovie.getVoteAverage();
+        int voteAverage = movie.getVoteAverage();
         mRating.setRating(voteAverage);
 
         //Set movie overview
-        mOverview.setText(mMovie.getOverview());
+        mOverview.setText(movie.getOverview());
 
         //Display movie poster
         Picasso.get()
-                .load(mMovie.getPosterUrl())
+                .load(movie.getPosterUrl())
                 .placeholder(R.drawable.image_loading)
                 .error(R.drawable.poster_error)
                 .into(mPosterImageView);
 
         //Display movie backdrop
         Picasso.get()
-                .load(mMovie.getBackdropUrl())
+                .load(movie.getBackdropUrl())
                 .placeholder(R.drawable.image_loading)
                 .error(R.drawable.poster_error)
                 .into(mBackdropImageView);
