@@ -19,7 +19,7 @@ import com.squareup.picasso.Picasso;
 public class FavouritesDetailActivity extends AppCompatActivity {
 
     // Extra for the movie ID to be received in the intent
-    private static final String EXTRA_MOVIE_ID = "extraMovieId";
+    public static final String EXTRA_MOVIE_ID = "extraMovieId";
 
     //Declare UI elements
     private TextView mTitleTextView;

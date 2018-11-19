@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
     private static final int TOP_RATED_LOADER_ID = 2;
 
 
-    private boolean favView = false;
+    private boolean favView;
     private MovieViewModel mViewModel;
 
 
@@ -93,8 +93,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
 
         mViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
 
-        loadPopularMoviesData();
-
         mSwipeRefreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
@@ -105,6 +103,9 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
                     }
                 }
         );
+
+        loadPopularMoviesData();
+
     }
 
     @Override
@@ -184,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
     public void onItemClickListener(Movie movie) {
         if (favView) {
             Intent intent = new Intent(MainActivity.this, FavouritesDetailActivity.class);
-            intent.putExtra(MainDetailActivity.EXTRA_MOVIE_ID, movie);
+            intent.putExtra(FavouritesDetailActivity.EXTRA_MOVIE_ID, movie);
             startActivity(intent);
         } else {
             Intent intent = new Intent(MainActivity.this, MainDetailActivity.class);
@@ -239,22 +240,25 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
         switch (id) {
             case R.id.action_refresh:
                 mSwipeRefreshLayout.setRefreshing(true);
+                break;
             case R.id.action_sort_by_popularity:
+                favView = false;
                 this.setTitle(R.string.app_name);
                 mRecyclerView.setAdapter(null);
                 loadPopularMoviesData();
-                return true;
+                break;
             case R.id.action_sort_by_rating:
+                favView = false;
                 this.setTitle(R.string.sort_by_rating_label);
                 mRecyclerView.setAdapter(null);
                 loadTopRatedMoviesData();
-                return true;
+                break;
             case R.id.action_sort_by_favourites:
                 favView = true;
                 this.setTitle(R.string.favourites_label);
                 mRecyclerView.setAdapter(null);
                 loadFavouriteMovies();
-                return true;
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
