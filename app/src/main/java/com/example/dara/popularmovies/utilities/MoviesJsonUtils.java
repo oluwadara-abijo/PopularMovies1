@@ -14,7 +14,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-class MoviesJsonUtils {
+public class MoviesJsonUtils {
 
     //Method to build url for poster path
     private static String buildPosterUrl(String posterPath) {

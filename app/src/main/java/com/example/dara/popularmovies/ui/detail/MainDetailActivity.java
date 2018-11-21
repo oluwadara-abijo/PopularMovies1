@@ -24,7 +24,7 @@ import com.example.dara.popularmovies.database.FavouritesDatabase;
 import com.example.dara.popularmovies.database.Movie;
 import com.example.dara.popularmovies.model.Review;
 import com.example.dara.popularmovies.model.Trailer;
-import com.example.dara.popularmovies.utilities.NetworkUtils;
+import com.example.dara.popularmovies.network.NetworkUtils;
 import com.example.dara.popularmovies.utilities.ReviewsLoader;
 import com.example.dara.popularmovies.utilities.TrailersLoader;
 import com.ms.square.android.expandabletextview.ExpandableTextView;

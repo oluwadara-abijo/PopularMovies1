@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.AsyncTaskLoader;
 
 import com.example.dara.popularmovies.model.Trailer;
+import com.example.dara.popularmovies.network.NetworkUtils;
 
 import java.io.IOException;
 import java.net.URL;

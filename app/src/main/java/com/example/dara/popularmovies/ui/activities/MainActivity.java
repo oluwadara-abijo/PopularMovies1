@@ -28,10 +28,10 @@ import com.example.dara.popularmovies.model.MovieAdapter;
 import com.example.dara.popularmovies.R;
 import com.example.dara.popularmovies.model.MovieViewModel;
 import com.example.dara.popularmovies.ui.detail.FavouritesDetailActivity;
-import com.example.dara.popularmovies.ui.detail.FavouritesViewModel;
 import com.example.dara.popularmovies.ui.detail.MainDetailActivity;
-import com.example.dara.popularmovies.utilities.MovieLoader;
-import com.example.dara.popularmovies.utilities.NetworkUtils;
+import com.example.dara.popularmovies.utilities.InjectorUtils;
+//import com.example.dara.popularmovies.utilities.MovieLoader;
+import com.example.dara.popularmovies.network.NetworkUtils;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -104,6 +104,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
                     }
                 }
         );
+
+        InjectorUtils.provideRepository(this).initializeData();
 
         loadPopularMoviesData();
 
@@ -195,12 +197,13 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
     public Loader<List<Movie>> onCreateLoader(int id, @Nullable Bundle bundle) {
         if (id == POPULAR_LOADER_ID) {
             mQueryUrl = NetworkUtils.popularMoviesUrl();
-            return new MovieLoader(this, mQueryUrl);
+//            return new MovieLoader(this, mQueryUrl);
         } else if (id == TOP_RATED_LOADER_ID) {
             mQueryUrl = NetworkUtils.topRatedMoviesUrl();
-            return new MovieLoader(this, mQueryUrl);
+//            return new MovieLoader(this, mQueryUrl);
         }
-        return new MovieLoader(this, mQueryUrl);
+//        return new MovieLoader(this, mQueryUrl);
+        return new Loader<>(this);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.example.dara.popularmovies.utilities;
+package com.example.dara.popularmovies.network;
 
 import android.net.Uri;
 
@@ -126,7 +126,7 @@ public final class NetworkUtils {
      * @return The contents of the HTTP response.
      * @throws IOException Related to network and stream reading.
      */
-    static String getResponseFromHttpUrl(URL url) throws IOException {
+    public static String getResponseFromHttpUrl(URL url) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         try {
             InputStream in = urlConnection.getInputStream();
