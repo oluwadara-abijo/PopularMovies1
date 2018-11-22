@@ -81,7 +81,6 @@ public class FavouritesDetailActivity extends AppCompatActivity {
         mFavButton.setOnClickListener(v -> {
             //Un-mark movie as favourite and remove movie from favourites database
             mFavButton.setImageResource(R.drawable.ic_baseline_star_border_24px);
-//            mDb.favouritesDao().removeFromFavourites(mMovie);
             mViewModel.removeFromFavourites(mMovie);
             Toast.makeText(FavouritesDetailActivity.this, "Removed from favourites",
                     Toast.LENGTH_SHORT).show();

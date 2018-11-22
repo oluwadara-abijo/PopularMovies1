@@ -1,6 +1,5 @@
 package com.example.dara.popularmovies.ui.activities;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -8,8 +7,6 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -38,8 +35,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
 
     private RecyclerView mRecyclerView;
 
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-
     private ProgressBar mLoadingIndicator;
 
     private TextView mErrorMessageTextView;
@@ -54,10 +49,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
     private String sort_by;
     private static final String SORT_BY_POPULARITY = "most_popular";
     private static final String SORT_BY_RATING = "top_rated";
+    private static final String SORT_BY_FAVOURITES = "favourites";
 
     private boolean favView;
     private MainActivityViewModel mViewModel;
-    private List<Movie> mList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,9 +63,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
         mRecyclerView = findViewById(R.id.rv_movies);
         mErrorMessageTextView = findViewById(R.id.tv_error_message);
         mLoadingIndicator = findViewById(R.id.loading_indicator);
-        mSwipeRefreshLayout = findViewById(R.id.swipe_refresh);
 
-        mList = new ArrayList<>();
+        List<Movie> mList = new ArrayList<>();
 
         mAdapter = new MovieAdapter(mList, this);
 
@@ -86,24 +80,19 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mAdapter);
 
-        MainViewModelFactory viewModelFactory = InjectorUtils.provideMainActivityViewModelFactory(this.getApplicationContext());
-        mViewModel = ViewModelProviders.of(this, viewModelFactory).get(MainActivityViewModel.class);
-
-        mSwipeRefreshLayout.setOnRefreshListener(
-                () -> {
-                    mRecyclerView.setAdapter(null);
-                    loadMovies();
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
-        );
+        //Set up view model
+        MainViewModelFactory viewModelFactory = InjectorUtils.
+                provideMainActivityViewModelFactory(this.getApplicationContext());
+        mViewModel = ViewModelProviders.of(this, viewModelFactory).
+                get(MainActivityViewModel.class);
 
         if (savedInstanceState == null) {
             sort_by = SORT_BY_POPULARITY;
         } else {
-            mGridLayoutManager.onRestoreInstanceState(mLayoutState);
+            sort_by = savedInstanceState.getString(BUNDLE_SORTING_STATE);
         }
 
-
+        //Fetch movies from the internet if there is connectivity. Else, display favourite movies.
         if (isNetworkAvailable()) {
             loadMovies();
         } else {
@@ -146,33 +135,54 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
     }
 
     private void loadFavouriteMovies() {
-        mViewModel.getFavouriteMovies().observe(this, movies -> mAdapter.setMovies(movies));
-        mLoadingIndicator.setVisibility(GONE);
-        mRecyclerView.setAdapter(mAdapter);
-        if (mLayoutState != null) {
-            mGridLayoutManager.onRestoreInstanceState(mLayoutState);
-        }
+        mViewModel.getFavouriteMovies().observe(this, movies -> {
+            mAdapter.setMovies(movies);
+            mRecyclerView.setAdapter(mAdapter);
+            mLoadingIndicator.setVisibility(GONE);
+            if (mLayoutState != null) {
+                mGridLayoutManager.onRestoreInstanceState(mLayoutState);
+            }
+        });
     }
 
     private void loadMovies() {
         switch (sort_by) {
             case SORT_BY_POPULARITY:
                 mViewModel.getPopularMovies().observe(this, movies -> {
-                    mLoadingIndicator.setVisibility(GONE);
                     mAdapter.setMovies(movies);
                     mRecyclerView.setAdapter(mAdapter);
+                    mLoadingIndicator.setVisibility(GONE);
+                    if (mLayoutState != null) {
+                        mGridLayoutManager.onRestoreInstanceState(mLayoutState);
+                    }
                 });
                 break;
             case SORT_BY_RATING:
                 mViewModel.getTopRatedMovies().observe(this, movies -> {
-                    mLoadingIndicator.setVisibility(GONE);
                     mAdapter.setMovies(movies);
                     mRecyclerView.setAdapter(mAdapter);
+                    mLoadingIndicator.setVisibility(GONE);
+                    if (mLayoutState != null) {
+                        mGridLayoutManager.onRestoreInstanceState(mLayoutState);
+                    }
                 });
                 break;
-
+            case SORT_BY_FAVOURITES:
+                loadFavouriteMovies();
         }
 
+    }
+
+    private void reloadMovies() {
+        mRecyclerView.setAdapter(null);
+        mLoadingIndicator.setVisibility(View.VISIBLE);
+        loadMovies();
+    }
+
+    private void reloadFavouriteMovies() {
+        mRecyclerView.setAdapter(null);
+        mLoadingIndicator.setVisibility(View.VISIBLE);
+        loadFavouriteMovies();
     }
 
     private void showData() {
@@ -211,32 +221,28 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
 
         switch (id) {
             case R.id.action_refresh:
-                mRecyclerView.setAdapter(null);
-                loadMovies();
-                mSwipeRefreshLayout.setRefreshing(false);
+                reloadMovies();
                 break;
             case R.id.action_sort_by_popularity:
                 favView = false;
-                sort_by = "most_popular";
+                sort_by = SORT_BY_POPULARITY;
                 this.setTitle(R.string.app_name);
-                mRecyclerView.setAdapter(null);
-                mLoadingIndicator.setVisibility(View.VISIBLE);
-                loadMovies();
+                reloadMovies();
                 break;
             case R.id.action_sort_by_rating:
                 favView = false;
-                sort_by = "top_rated";
+                sort_by = SORT_BY_RATING;
                 this.setTitle(R.string.sort_by_rating_label);
-                mRecyclerView.setAdapter(null);
-                mLoadingIndicator.setVisibility(View.VISIBLE);
-                loadMovies();
+                reloadMovies();
                 break;
             case R.id.action_sort_by_favourites:
                 favView = true;
+                sort_by = SORT_BY_FAVOURITES;
                 this.setTitle(R.string.favourites_label);
-                loadFavouriteMovies();
+                reloadFavouriteMovies();
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
+
 }
