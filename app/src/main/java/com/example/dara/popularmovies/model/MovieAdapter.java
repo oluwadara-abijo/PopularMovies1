@@ -62,7 +62,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
      * When data changes, this method updates the list of favourite movies
      * and notifies the adapter to use the new values on it
      */
-    public void setFavouriteMovies(List<Movie> movies) {
+    public void setMovies(List<Movie> movies) {
         mMovies = movies;
         notifyDataSetChanged();
     }

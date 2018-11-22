@@ -6,6 +6,8 @@ import android.util.Log;
 
 import com.example.dara.popularmovies.database.FavouritesDao;
 import com.example.dara.popularmovies.database.Movie;
+import com.example.dara.popularmovies.model.Review;
+import com.example.dara.popularmovies.model.Trailer;
 import com.example.dara.popularmovies.network.MoviesNetworkDataSource;
 import com.example.dara.popularmovies.utilities.InjectorUtils;
 
@@ -52,33 +54,51 @@ public class MoviesRepository {
         return sInstance;
     }
 
-    /**
-     * Creates periodic sync tasks and checks to see if an immediate sync is required. If an
-     * immediate sync is required, this method will take care of making sure that sync occurs.
-     */
-    public synchronized void initializeData() {
-
-        // Only perform initialization once per app lifetime. If initialization has already been
-        // performed, we have nothing to do in this method.
-        if (mInitialized) return;
-        mInitialized = true;
-
-        // COMPLETED Finish this method when instructed
-        getMovies("most_popular");
-    }
-
-    public void addToFavourites(Movie movie) {
-        LiveData<List<Movie>> favMovies = mFavouritesDao.getAllFavouriteMovies();
-        favMovies.observeForever(favouriteMovies -> mExecutors.diskIO().execute(() -> {
-            mFavouritesDao.addToFavourites (movie);
-            Log.d(LOG_TAG, "New values inserted");
-        }));
-
-    }
-
-    private void getMovies(String sort_by) {
+    public LiveData<List<Movie>> getPopularMovies() {
         MoviesNetworkDataSource networkDataSource = InjectorUtils
                 .provideNetworkDataSource(mContext);
-        networkDataSource.getMovies(sort_by);
+        return networkDataSource.getPopularMovies();
     }
+
+    public LiveData<List<Movie>> getTopRatedMovies() {
+        MoviesNetworkDataSource networkDataSource = InjectorUtils
+                .provideNetworkDataSource(mContext);
+        return networkDataSource.getTopRatedMovies();
+    }
+
+    public LiveData<List<Review>> getReviews(Movie movie) {
+        MoviesNetworkDataSource networkDataSource = InjectorUtils
+                .provideNetworkDataSource(mContext);
+        return networkDataSource.getReviews(movie);
+    }
+
+    public LiveData<List<Trailer>> getTrailers(Movie movie) {
+        MoviesNetworkDataSource networkDataSource = InjectorUtils
+                .provideNetworkDataSource(mContext);
+        return networkDataSource.getTrailers(movie);
+    }
+
+    /**
+     * Database related operations
+     **/
+    public LiveData<Movie> getMovieByTitle (String title) {
+        return mFavouritesDao.getMovieByTitle(title);
+    }
+
+    //Add movie to favourites
+    public void addToFavourites(Movie movie) {
+        mFavouritesDao.addToFavourites(movie);
+
+    }
+
+    //Remove movie from favourites
+    public void removeFromFavourites (Movie movie) {
+        mFavouritesDao.removeFromFavourites(movie);
+    }
+
+    //Get all favourite movies
+    public LiveData<List<Movie>> getFavouriteMovies () {
+        return mFavouritesDao.getAllFavouriteMovies();
+    }
+
 }

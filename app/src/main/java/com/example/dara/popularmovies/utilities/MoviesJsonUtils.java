@@ -33,7 +33,7 @@ public class MoviesJsonUtils {
     /**
      * Returns a list of Trailer objects
      */
-    static List<Trailer> extractTrailersFromJson(String trailersJson) {
+    public static List<Trailer> extractTrailersFromJson(String trailersJson) {
         if (TextUtils.isEmpty(trailersJson)) {
             return null;
         }

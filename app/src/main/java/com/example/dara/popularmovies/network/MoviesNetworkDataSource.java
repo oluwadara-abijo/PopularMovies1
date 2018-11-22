@@ -1,11 +1,14 @@
 package com.example.dara.popularmovies.network;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.util.Log;
 
 import com.example.dara.popularmovies.AppExecutors;
 import com.example.dara.popularmovies.database.Movie;
+import com.example.dara.popularmovies.model.Review;
+import com.example.dara.popularmovies.model.Trailer;
 import com.example.dara.popularmovies.utilities.MoviesJsonUtils;
 
 import java.io.IOException;
@@ -43,36 +46,100 @@ public class MoviesNetworkDataSource {
         return sInstance;
     }
 
-    //Getter method for fetched movies
-    public MutableLiveData<Movie[]> getCurrentMovies() {
-        return mMovies;
-    }
-
     //Get movies data
-    public void getMovies(String sort_by) {
-        Log.d(LOG_TAG, "Fetch weather started");
+    public LiveData<List<Movie>> getPopularMovies() {
+        MutableLiveData<List<Movie>> mutableLiveData = new MutableLiveData<>();
 
         mExecutors.networkIO().execute(() -> {
             try {
-                URL queryUrl = null;
                 //Build the url based on the preferred sorting
-                if (sort_by.equals("most_popular")) {
-                    queryUrl = NetworkUtils.popularMoviesUrl();
-                } else if (sort_by.equals("top_rated")) {
-                    queryUrl = NetworkUtils.topRatedMoviesUrl();
-                }
+                URL queryUrl = NetworkUtils.popularMoviesUrl();
 
                 //Get json response from url
                 String jsonResponse = NetworkUtils.getResponseFromHttpUrl(queryUrl);
 
                 //Parse json response into a list of movies
                 List<Movie> movieResponse = MoviesJsonUtils.extractMoviesFromJson(jsonResponse);
+                mutableLiveData.postValue(movieResponse);
                 Log.d(LOG_TAG, "JSON Parsing finished");
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
+        return mutableLiveData;
+    }
+
+    //Get movies data
+    public LiveData<List<Movie>> getTopRatedMovies() {
+        MutableLiveData<List<Movie>> mutableLiveData = new MutableLiveData<>();
+
+        mExecutors.networkIO().execute(() -> {
+            try {
+                //Build the url based on the preferred sorting
+                URL queryUrl = NetworkUtils.topRatedMoviesUrl();
+
+                //Get json response from url
+                String jsonResponse = NetworkUtils.getResponseFromHttpUrl(queryUrl);
+
+                //Parse json response into a list of movies
+                List<Movie> movieResponse = MoviesJsonUtils.extractMoviesFromJson(jsonResponse);
+                mutableLiveData.postValue(movieResponse);
+                Log.d(LOG_TAG, "JSON Parsing finished");
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        return mutableLiveData;
+    }
+
+    //Get movie reviews
+    public LiveData<List<Review>> getReviews(Movie movie) {
+        MutableLiveData<List<Review>> mutableLiveData = new MutableLiveData<>();
+
+        mExecutors.networkIO().execute(() -> {
+            try {
+                //Build the url for the movie review endpoint
+                URL queryUrl = NetworkUtils.reviewsUrl(movie);
+
+                //Get json response from url
+                String jsonResponse = NetworkUtils.getResponseFromHttpUrl(queryUrl);
+
+                //Parse json response into a list of movies
+                List<Review> movieReviews = MoviesJsonUtils.extractReviewsFromJson(jsonResponse);
+                mutableLiveData.postValue(movieReviews);
+                Log.d(LOG_TAG, "JSON Parsing finished");
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        return mutableLiveData;
+    }
+
+    //Get movie trailers
+    public LiveData<List<Trailer>> getTrailers(Movie movie) {
+        MutableLiveData<List<Trailer>> mutableLiveData = new MutableLiveData<>();
+
+        mExecutors.networkIO().execute(() -> {
+            try {
+                //Build the url for the movie review endpoint
+                URL queryUrl = NetworkUtils.trailersUrl(movie);
+
+                //Get json response from url
+                String jsonResponse = NetworkUtils.getResponseFromHttpUrl(queryUrl);
+
+                //Parse json response into a list of movies
+                List<Trailer> movieReviews = MoviesJsonUtils.extractTrailersFromJson(jsonResponse);
+                mutableLiveData.postValue(movieReviews);
+                Log.d(LOG_TAG, "JSON Parsing finished");
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        return mutableLiveData;
     }
 
 }

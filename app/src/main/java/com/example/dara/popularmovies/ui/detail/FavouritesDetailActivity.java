@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.example.dara.popularmovies.R;
 import com.example.dara.popularmovies.database.FavouritesDatabase;
 import com.example.dara.popularmovies.database.Movie;
+import com.example.dara.popularmovies.utilities.InjectorUtils;
 import com.squareup.picasso.Picasso;
 
 
@@ -60,10 +61,15 @@ public class FavouritesDetailActivity extends AppCompatActivity {
         mFavButton = findViewById(R.id.favourites_button);
 
         //Create an instance of the database
-        mDb = FavouritesDatabase.getInstance(getApplicationContext());
+//        mDb = FavouritesDatabase.getInstance(getApplicationContext());
+        //Get the Movie object from the intent extra
+        mMovie = getIntent().getParcelableExtra(EXTRA_MOVIE_ID);
+
+        //Get the view model factory
+        FavouritesViewModelFactory viewModelFactory = InjectorUtils.provideDetailViewModelFactory(this, mMovie.getTitle());
 
         //Create new FavouritesDetailActivityViewModel instance
-        mViewModel = ViewModelProviders.of(this).get(FavouritesViewModel.class);
+        mViewModel = ViewModelProviders.of(this, viewModelFactory).get(FavouritesViewModel.class);
         //Observe the LiveData
         mViewModel.getMovie().observe(this, movie -> {
             if (movie != null) {
@@ -71,14 +77,12 @@ public class FavouritesDetailActivity extends AppCompatActivity {
             }
         });
 
-        //Get the Movie object from the intent extra
-        mMovie = getIntent().getParcelableExtra(EXTRA_MOVIE_ID);
-
         //Set on click listener on favourites button
         mFavButton.setOnClickListener(v -> {
             //Un-mark movie as favourite and remove movie from favourites database
             mFavButton.setImageResource(R.drawable.ic_baseline_star_border_24px);
-            mDb.favouritesDao().removeFromFavourites(mMovie);
+//            mDb.favouritesDao().removeFromFavourites(mMovie);
+            mViewModel.removeFromFavourites(mMovie);
             Toast.makeText(FavouritesDetailActivity.this, "Removed from favourites",
                     Toast.LENGTH_SHORT).show();
         });

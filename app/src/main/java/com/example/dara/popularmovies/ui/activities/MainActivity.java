@@ -1,5 +1,6 @@
 package com.example.dara.popularmovies.ui.activities;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -7,10 +8,7 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,20 +24,17 @@ import android.widget.TextView;
 import com.example.dara.popularmovies.database.Movie;
 import com.example.dara.popularmovies.model.MovieAdapter;
 import com.example.dara.popularmovies.R;
-import com.example.dara.popularmovies.model.MovieViewModel;
 import com.example.dara.popularmovies.ui.detail.FavouritesDetailActivity;
 import com.example.dara.popularmovies.ui.detail.MainDetailActivity;
 import com.example.dara.popularmovies.utilities.InjectorUtils;
-//import com.example.dara.popularmovies.utilities.MovieLoader;
-import com.example.dara.popularmovies.network.NetworkUtils;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements MovieAdapter.ItemClickListener,
-        LoaderManager.LoaderCallbacks<List<Movie>> {
+import static android.view.View.GONE;
+
+public class MainActivity extends AppCompatActivity implements MovieAdapter.ItemClickListener {
 
     private RecyclerView mRecyclerView;
 
@@ -52,31 +47,30 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
     private MovieAdapter mAdapter;
     private Parcelable mLayoutState;
     private GridLayoutManager mGridLayoutManager;
+
     private final String BUNDLE_STATE = "state";
+    private final String BUNDLE_SORTING_STATE = "sorting_state";
 
-    private URL mQueryUrl;
-
-    private static final int POPULAR_LOADER_ID = 1;
-    private static final int TOP_RATED_LOADER_ID = 2;
-
+    private String sort_by;
+    private static final String SORT_BY_POPULARITY = "most_popular";
+    private static final String SORT_BY_RATING = "top_rated";
 
     private boolean favView;
-    private MovieViewModel mViewModel;
+    private MainActivityViewModel mViewModel;
+    private List<Movie> mList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         mRecyclerView = findViewById(R.id.rv_movies);
-
         mErrorMessageTextView = findViewById(R.id.tv_error_message);
-
         mLoadingIndicator = findViewById(R.id.loading_indicator);
-
         mSwipeRefreshLayout = findViewById(R.id.swipe_refresh);
 
-        List<Movie> mList = new ArrayList<>();
+        mList = new ArrayList<>();
 
         mAdapter = new MovieAdapter(mList, this);
 
@@ -92,22 +86,29 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mAdapter);
 
-        mViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
+        MainViewModelFactory viewModelFactory = InjectorUtils.provideMainActivityViewModelFactory(this.getApplicationContext());
+        mViewModel = ViewModelProviders.of(this, viewModelFactory).get(MainActivityViewModel.class);
 
         mSwipeRefreshLayout.setOnRefreshListener(
-                new SwipeRefreshLayout.OnRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-                        mRecyclerView.setAdapter(null);
-                        mRecyclerView.setAdapter(mAdapter);
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
+                () -> {
+                    mRecyclerView.setAdapter(null);
+                    loadMovies();
+                    mSwipeRefreshLayout.setRefreshing(false);
                 }
         );
 
-        InjectorUtils.provideRepository(this).initializeData();
+        if (savedInstanceState == null) {
+            sort_by = SORT_BY_POPULARITY;
+        } else {
+            mGridLayoutManager.onRestoreInstanceState(mLayoutState);
+        }
 
-        loadPopularMoviesData();
+
+        if (isNetworkAvailable()) {
+            loadMovies();
+        } else {
+            loadFavouriteMovies();
+        }
 
     }
 
@@ -116,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
         super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState != null) {
             mLayoutState = savedInstanceState.getParcelable(BUNDLE_STATE);
+            sort_by = savedInstanceState.getString(BUNDLE_SORTING_STATE);
         }
     }
 
@@ -124,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
         super.onSaveInstanceState(outState);
         mLayoutState = mGridLayoutManager.onSaveInstanceState();
         outState.putParcelable(BUNDLE_STATE, mLayoutState);
+        outState.putString(BUNDLE_SORTING_STATE, sort_by);
     }
 
     @Override
@@ -143,35 +146,38 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
     }
 
     private void loadFavouriteMovies() {
-        mAdapter = new MovieAdapter(new ArrayList<>(), this);
-        mViewModel.getFavMovies().observe(this, movies -> mAdapter.setFavouriteMovies(movies));
+        mViewModel.getFavouriteMovies().observe(this, movies -> mAdapter.setMovies(movies));
+        mLoadingIndicator.setVisibility(GONE);
         mRecyclerView.setAdapter(mAdapter);
+        if (mLayoutState != null) {
+            mGridLayoutManager.onRestoreInstanceState(mLayoutState);
+        }
     }
 
-    private void loadPopularMoviesData() {
-        if (isNetworkAvailable()) {
-            getSupportLoaderManager().initLoader(POPULAR_LOADER_ID, null, this);
-        } else {
-            showError();
-            mErrorMessageTextView.setText(R.string.network_error_message);
-        }
-        mSwipeRefreshLayout.setRefreshing(false);
+    private void loadMovies() {
+        switch (sort_by) {
+            case SORT_BY_POPULARITY:
+                mViewModel.getPopularMovies().observe(this, movies -> {
+                    mLoadingIndicator.setVisibility(GONE);
+                    mAdapter.setMovies(movies);
+                    mRecyclerView.setAdapter(mAdapter);
+                });
+                break;
+            case SORT_BY_RATING:
+                mViewModel.getTopRatedMovies().observe(this, movies -> {
+                    mLoadingIndicator.setVisibility(GONE);
+                    mAdapter.setMovies(movies);
+                    mRecyclerView.setAdapter(mAdapter);
+                });
+                break;
 
-    }
-
-    private void loadTopRatedMoviesData() {
-        if (isNetworkAvailable()) {
-            getSupportLoaderManager().initLoader(TOP_RATED_LOADER_ID, null, this);
-        } else {
-            showError();
-            mErrorMessageTextView.setText(R.string.network_error_message);
         }
-        mSwipeRefreshLayout.setRefreshing(false);
+
     }
 
     private void showData() {
         mRecyclerView.setVisibility(View.VISIBLE);
-        mErrorMessageTextView.setVisibility(View.GONE);
+        mErrorMessageTextView.setVisibility(GONE);
     }
 
     private void showError() {
@@ -192,39 +198,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
         }
     }
 
-    @NonNull
-    @Override
-    public Loader<List<Movie>> onCreateLoader(int id, @Nullable Bundle bundle) {
-        if (id == POPULAR_LOADER_ID) {
-            mQueryUrl = NetworkUtils.popularMoviesUrl();
-//            return new MovieLoader(this, mQueryUrl);
-        } else if (id == TOP_RATED_LOADER_ID) {
-            mQueryUrl = NetworkUtils.topRatedMoviesUrl();
-//            return new MovieLoader(this, mQueryUrl);
-        }
-//        return new MovieLoader(this, mQueryUrl);
-        return new Loader<>(this);
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull Loader<List<Movie>> loader, List<Movie> movies) {
-        mLoadingIndicator.setVisibility(View.GONE);
-        if (movies != null && !movies.isEmpty()) {
-            mAdapter = new MovieAdapter(movies, this);
-            mAdapter.notifyDataSetChanged();
-            mRecyclerView.setAdapter(mAdapter);
-            showData();
-        } else {
-            showError();
-        }
-
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<List<Movie>> loader) {
-
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -238,24 +211,29 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
 
         switch (id) {
             case R.id.action_refresh:
-                mSwipeRefreshLayout.setRefreshing(true);
+                mRecyclerView.setAdapter(null);
+                loadMovies();
+                mSwipeRefreshLayout.setRefreshing(false);
                 break;
             case R.id.action_sort_by_popularity:
                 favView = false;
+                sort_by = "most_popular";
                 this.setTitle(R.string.app_name);
                 mRecyclerView.setAdapter(null);
-                loadPopularMoviesData();
+                mLoadingIndicator.setVisibility(View.VISIBLE);
+                loadMovies();
                 break;
             case R.id.action_sort_by_rating:
                 favView = false;
+                sort_by = "top_rated";
                 this.setTitle(R.string.sort_by_rating_label);
                 mRecyclerView.setAdapter(null);
-                loadTopRatedMoviesData();
+                mLoadingIndicator.setVisibility(View.VISIBLE);
+                loadMovies();
                 break;
             case R.id.action_sort_by_favourites:
                 favView = true;
                 this.setTitle(R.string.favourites_label);
-                mRecyclerView.setAdapter(null);
                 loadFavouriteMovies();
                 break;
         }
