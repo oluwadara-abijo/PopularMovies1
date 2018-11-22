@@ -5,14 +5,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dara.popularmovies.R;
-import com.example.dara.popularmovies.database.FavouritesDatabase;
 import com.example.dara.popularmovies.database.Movie;
 import com.example.dara.popularmovies.utilities.InjectorUtils;
 import com.squareup.picasso.Picasso;
@@ -31,9 +29,6 @@ public class FavouritesDetailActivity extends AppCompatActivity {
     private RatingBar mRating;
     private TextView mOverview;
     private ImageView mFavButton;
-
-    //Declare database object
-    private FavouritesDatabase mDb;
 
     //Current movie
     private Movie mMovie;
@@ -60,13 +55,11 @@ public class FavouritesDetailActivity extends AppCompatActivity {
         mOverview = findViewById(R.id.tv_overview);
         mFavButton = findViewById(R.id.favourites_button);
 
-        //Create an instance of the database
-//        mDb = FavouritesDatabase.getInstance(getApplicationContext());
         //Get the Movie object from the intent extra
         mMovie = getIntent().getParcelableExtra(EXTRA_MOVIE_ID);
 
         //Get the view model factory
-        FavouritesViewModelFactory viewModelFactory = InjectorUtils.provideDetailViewModelFactory(this, mMovie.getTitle());
+        FavouritesViewModelFactory viewModelFactory = InjectorUtils.provideFavouritesViewModelFactory(this, mMovie.getTitle());
 
         //Create new FavouritesDetailActivityViewModel instance
         mViewModel = ViewModelProviders.of(this, viewModelFactory).get(FavouritesViewModel.class);

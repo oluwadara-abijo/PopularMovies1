@@ -116,37 +116,31 @@ public class MainDetailActivity extends AppCompatActivity implements View.OnClic
         mTrailer3Btn.setOnClickListener(this);
 
         //Set on click listener on share button
-        mShareTrailerBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, trailer1Url.toString());
-                sendIntent.setType("text/plain");
-                startActivity(sendIntent);
-            }
+        mShareTrailerBtn.setOnClickListener(v -> {
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, trailer1Url.toString());
+            sendIntent.setType("text/plain");
+            startActivity(sendIntent);
         });
 
         //Set on click listener on favourites button
-        View.OnClickListener mFavButtonListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Integer tag = (Integer) mFavouritesButton.getTag();
-                switch (tag) {
-                    case 1:
-                        mFavouritesButton.setImageResource(R.drawable.ic_baseline_star_border_24px);
-                        mFavouritesButton.setTag(0);
-                        Toast.makeText(MainDetailActivity.this, "Removed from favourites", Toast.LENGTH_SHORT).show();
-                        mDb.favouritesDao().removeFromFavourites(mMovie);
-                        break;
-                    case 0:
-                    default:
-                        mFavouritesButton.setImageResource(R.drawable.ic_baseline_star_24px);
-                        mFavouritesButton.setTag(1);
-                        Toast.makeText(MainDetailActivity.this, "Added to favourites", Toast.LENGTH_SHORT).show();
-                        mDb.favouritesDao().addToFavourites(mMovie);
-                        break;
-                }
+        View.OnClickListener mFavButtonListener = view -> {
+            Integer tag = (Integer) mFavouritesButton.getTag();
+            switch (tag) {
+                case 1:
+                    mFavouritesButton.setImageResource(R.drawable.ic_baseline_star_border_24px);
+                    mFavouritesButton.setTag(0);
+                    Toast.makeText(MainDetailActivity.this, "Removed from favourites", Toast.LENGTH_SHORT).show();
+                    mDb.favouritesDao().removeFromFavourites(mMovie);
+                    break;
+                case 0:
+                default:
+                    mFavouritesButton.setImageResource(R.drawable.ic_baseline_star_24px);
+                    mFavouritesButton.setTag(1);
+                    Toast.makeText(MainDetailActivity.this, "Added to favourites", Toast.LENGTH_SHORT).show();
+                    mDb.favouritesDao().addToFavourites(mMovie);
+                    break;
             }
         };
         mFavouritesButton.setOnClickListener(mFavButtonListener);

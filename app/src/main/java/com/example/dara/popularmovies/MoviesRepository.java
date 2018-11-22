@@ -27,7 +27,6 @@ public class MoviesRepository {
     private final MoviesNetworkDataSource mMoviesNetworkDataSource;
     private final AppExecutors mExecutors;
     private Context mContext;
-    private boolean mInitialized = false;
 
     //Constructor
     private MoviesRepository(FavouritesDao favouritesDao,

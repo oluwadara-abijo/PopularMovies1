@@ -24,14 +24,10 @@ public class MoviesNetworkDataSource {
     private final Context mContext;
     private final AppExecutors mExecutors;
 
-    //LiveData storing favourite movies
-    private final MutableLiveData<Movie[]> mMovies;
-
     //Constructor
     private MoviesNetworkDataSource(Context context, AppExecutors executors) {
         mContext = context;
         mExecutors = executors;
-        mMovies = new MutableLiveData<>();
     }
 
     //Singleton for this class
